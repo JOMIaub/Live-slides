@@ -63,8 +63,10 @@
       background:
         radial-gradient(1200px 800px at 85% 10%, #ffffff10 0%, #ffffff00 60%),
         linear-gradient(0deg, #ffffff05, #ffffff00);
+      pointer-events: none; /* gør ikke-aktive slides uklickbare */
+      z-index: 0;
     }
-    .slide.active{opacity:1; transform:none;}
+    .slide.active{opacity:1; transform:none; pointer-events:auto; z-index:2;}
 
     h1{font-weight:800; font-size:clamp(36px, 6vw, 68px); margin:0; letter-spacing:.2px}
     h2{font-weight:800; font-size:clamp(26px, 3.8vw, 40px); margin:0}

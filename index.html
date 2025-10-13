@@ -1,61 +1,207 @@
 <!doctype html>
 <html lang="da">
 <head>
-  <meta charset="utf-8">
-  <title>Live Slides – Jona</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+  <meta charset="utf-8" />
+  <title>Jona – Interaktive Slides</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <!-- Reveal.js CSS -->
   <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/black.css" id="theme">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/white.css" id="theme">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
-    body { background: #111; }
-    .reveal h2, .reveal h3, .reveal p { color: white; }
-    iframe { width: 100%; height: 60vh; border: none; border-radius: 10px; }
+    :root{
+      /* farver: blå-grå palette */
+      --bg: #f4f7f8;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --brand: #0a5ea8;        /* primær blå */
+      --brand-2: #6bb4ff;      /* sekundær lys blå */
+      --card: #ffffff;
+    }
+    body { background: var(--bg); }
+
+    /* reveal overordnet typografi */
+    .reveal { color: var(--ink); }
+    .reveal h1, .reveal h2, .reveal h3 { 
+      font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      letter-spacing: -0.5px;
+    }
+    .reveal h2 { color: #073255; }
+    .reveal p, .reveal li {
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      line-height: 1.6;
+      font-size: 1.05em;
+    }
+    .reveal small { color: var(--muted); }
+
+    /* kort-komponent til “cards” på slides */
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.07);
+    }
+
+    /* split layout */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+    @media (max-width: 900px){
+      .split { grid-template-columns: 1fr; }
+    }
+
+    /* billeder */
+    .reveal img {
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    /* callout badge */
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #fff;
+      font: 600 12px/1 "Inter", sans-serif;
+      letter-spacing: .3px;
+    }
+
+    /* fast logo/branding i hjørnet – udskift src nedenfor */
+    .brandmark {
+      position: fixed; 
+      top: 14px; left: 14px; 
+      z-index: 9999; 
+      display:flex; align-items:center; gap:10px;
+    }
+    .brandmark img { height: 28px; border-radius: 6px; box-shadow:none; }
+    .brandmark span { font: 700 13px/1 "Inter", sans-serif; color:#123; opacity:.7; }
+
+    /* footer / slide-nummer badge */
+    .reveal .slide-number {
+      background: rgba(0,0,0,.06);
+      border-radius: 10px;
+      padding: 6px 10px;
+    }
+
+    /* mikro-animation til hover */
+    @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-6px)} }
+    .floaty:hover { animation: float 2s ease-in-out infinite; }
   </style>
 </head>
 <body>
 
+<!-- Logo/branding – skift kilde hvis du vil -->
+<div class="brandmark">
+  <img src="https://learninglib.org/wp-content/uploads/2022/11/AUB-logo-da-1.png" alt="AUB">
+  <span>Interaktive Slides</span>
+</div>
+
 <div class="reveal">
   <div class="slides">
 
-    <section>
-      <h2>Hej 👋</h2>
-      <p>Velkommen til Jona’s interaktive slides!</p>
-      <p>Brug <kbd>←</kbd> og <kbd>→</kbd> for at skifte slides.</p>
+    <!-- 1: Titel -->
+    <section data-background-color="#eaf4ff">
+      <span class="badge">LIVE • Reveal.js</span>
+      <h2 style="margin-top:12px">AI & Læring – Interaktive demo-slides</h2>
+      <p>Brug <kbd>←</kbd> og <kbd>→</kbd> til at navigere • <kbd>F</kbd> for fuldskærm</p>
+      <p><small>Skabelon: nordic minimal – farver, typografi og layout kan tilpasses.</small></p>
     </section>
 
+    <!-- 2: Fragmenter (trinvis visning) -->
     <section>
-      <h2>💡 Eksempel på indlejret element</h2>
-      <p>Her kan du fx indsætte et interaktivt element som en quiz, formular eller video.</p>
-      <iframe src="https://forms.office.com/"></iframe>
-      <p><small>Erstat linket med fx Mentimeter, Slido, YouTube, eller dit eget HTML-spil.</small></p>
+      <h2>Hvorfor web-baserede slides?</h2>
+      <ul>
+        <li class="fragment">Kan hostes gratis på <strong>GitHub Pages</strong></li>
+        <li class="fragment">Indlejrer <strong>interaktive</strong> elementer (afstemning, spil, video)</li>
+        <li class="fragment">Nem deling via <strong>URL</strong> – også på mobil</li>
+        <li class="fragment">Fuld kontrol over <strong>design og data</strong></li>
+      </ul>
     </section>
 
+    <!-- 3: Split layout (tekst + billede) -->
     <section>
-      <h2>🎨 GIF / billede</h2>
-      <img src="https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif" alt="confetti">
+      <h2>Designprincipper</h2>
+      <div class="split">
+        <div class="card">
+          <ol style="margin:0">
+            <li><strong>Én idé per slide.</strong></li>
+            <li><strong>Kontrast & typografi</strong> – læsbarhed først.</li>
+            <li><strong>Rytme</strong> – skift mellem oplæg og aktivitet.</li>
+            <li><strong>Interaktion</strong> – spørg, stem, byg sammen.</li>
+          </ol>
+        </div>
+        <div>
+          <img class="floaty" src="https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1600&auto=format&fit=crop" alt="abstract" />
+        </div>
+      </div>
     </section>
 
+    <!-- 4: Embed – erstat src med din tjeneste -->
+    <section data-background-color="#f7fbff">
+      <h2>Indlejret live-element</h2>
+      <p><small>Erstat <code>src</code> med Mentimeter, Slido, Microsoft Forms, YouTube – eller dit eget HTML-spil.</small></p>
+      <iframe
+        src="https://forms.office.com/"
+        title="Embedded live widget"
+        style="width:100%; height:62vh; border:none; border-radius:14px; background:#fff;">
+      </iframe>
+    </section>
+
+    <!-- 5: Markdown slide (hurtig forfatteroplevelse) -->
+    <section data-markdown>
+<textarea data-template>
+## Slide skrevet i **Markdown**
+- Hurtigt at skrive
+- Let at redigere undervejs
+- Understøtter **bold**, _italic_, lister, links osv.
+
+> Tip: Brug Markdown til indhold – behold HTML til layout og design.
+</textarea>
+    </section>
+
+    <!-- 6: Baggrundsbillede + farveoverlay -->
+    <section 
+      data-background-image="https://images.unsplash.com/photo-1526378722484-bd91ca387e72?q=80&w=1600&auto=format&fit=crop"
+      data-background-size="cover"
+      data-background-opacity="0.12"
+      data-background-color="#0a5ea8">
+      <h2 style="color:#fff">Baggrundsbillede som stemningsbærer</h2>
+      <p style="color:#e9f2ff">Brug sparsomme billeder og høj kontrast på tekst.</p>
+    </section>
+
+    <!-- 7: Afslutning -->
     <section>
-      <h2>🚀 Tak!</h2>
-      <p>Disse slides hostes via GitHub Pages.</p>
+      <h2>Tak! 🚀</h2>
+      <p>Slides hostes via <strong>GitHub Pages</strong>. Tilpas farver, skrifter og layout for din egen identitet.</p>
+      <p><small>Kilde: Reveal.js • Tema: custom “nordic minimal”.</small></p>
     </section>
 
   </div>
 </div>
 
-<!-- Reveal.js JS -->
+<!-- Reveal.js JS + plugins -->
 <script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
+<script src="https://unpkg.com/reveal.js/plugin/markdown/markdown.js"></script>
+<script src="https://unpkg.com/reveal.js/plugin/notes/notes.js"></script>
+
 <script>
   Reveal.initialize({
     hash: true,
     slideNumber: true,
     transition: 'fade',
+    plugins: [ RevealMarkdown, RevealNotes ],
+    // justér marginer hvis du vil have mere "luft"
+    margin: 0.08
   });
 </script>
 
 </body>
 </html>
-

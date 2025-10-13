@@ -1,11 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="da">
-  <head>
-    <meta charset="utf-8">
-    <title>Jona’s Live Slides</title>
-  </head>
-  <body>
-    <h1>Hej fra Jona’s Live Slides 🎉</h1>
-    <p>Hvis du ser denne side online, virker GitHub Pages perfekt!</p>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>Live Slides – Jona</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Reveal.js CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/black.css" id="theme">
+
+  <style>
+    body { background: #111; }
+    .reveal h2, .reveal h3, .reveal p { color: white; }
+    iframe { width: 100%; height: 60vh; border: none; border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+
+    <section>
+      <h2>Hej 👋</h2>
+      <p>Velkommen til Jona’s interaktive slides!</p>
+      <p>Brug <kbd>←</kbd> og <kbd>→</kbd> for at skifte slides.</p>
+    </section>
+
+    <section>
+      <h2>💡 Eksempel på indlejret element</h2>
+      <p>Her kan du fx indsætte et interaktivt element som en quiz, formular eller video.</p>
+      <iframe src="https://forms.office.com/"></iframe>
+      <p><small>Erstat linket med fx Mentimeter, Slido, YouTube, eller dit eget HTML-spil.</small></p>
+    </section>
+
+    <section>
+      <h2>🎨 GIF / billede</h2>
+      <img src="https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif" alt="confetti">
+    </section>
+
+    <section>
+      <h2>🚀 Tak!</h2>
+      <p>Disse slides hostes via GitHub Pages.</p>
+    </section>
+
+  </div>
+</div>
+
+<!-- Reveal.js JS -->
+<script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    transition: 'fade',
+  });
+</script>
+
+</body>
 </html>
+

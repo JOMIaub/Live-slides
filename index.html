@@ -1,207 +1,484 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="da">
 <head>
   <meta charset="utf-8" />
-  <title>Jona – Interaktive Slides</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Reveal.js CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/white.css" id="theme">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-
+  <title>Interaktive undervisningsslides – AUB</title>
+  <!-- Google Fonts: Barlow 400/700/800 -->
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      /* farver: blå-grå palette */
-      --bg: #f4f7f8;
-      --ink: #1f2937;
-      --muted: #6b7280;
-      --brand: #0a5ea8;        /* primær blå */
-      --brand-2: #6bb4ff;      /* sekundær lys blå */
-      --card: #ffffff;
-    }
-    body { background: var(--bg); }
+      /* Farvepalette (kun disse + sort/hvid) */
+      --primary-900:#211a52; /* dyb indigo */
+      --primary-600:#594fbf; /* violet */
+      --primary-500:#54616e; /* skifergrå */
+      --accent-amber:#df8e2e;
+      --accent-terracotta:#a16547;
+      --accent-rust:#bb5b17;
+      --accent-olive:#97701f;
+      --accent-blue:#007fa3;
+      --accent-teal:#0e8563;
+      --accent-rose:#e78293;
+      --accent-sand:#cc8b66;
+      --black:#000000;
+      --white:#ffffff;
 
-    /* reveal overordnet typografi */
-    .reveal { color: var(--ink); }
-    .reveal h1, .reveal h2, .reveal h3 { 
-      font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      letter-spacing: -0.5px;
+      --bg: var(--primary-900);
+      --fg: var(--white);
+      --muted: #ffffffcc; /* hvid med alfa */
+      --card: var(--primary-500);
+      --card-fg: var(--white);
     }
-    .reveal h2 { color: #073255; }
-    .reveal p, .reveal li {
-      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      line-height: 1.6;
-      font-size: 1.05em;
-    }
-    .reveal small { color: var(--muted); }
 
-    /* kort-komponent til “cards” på slides */
-    .card {
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: 'Barlow', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height:1.35;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Slide container */
+    .deck{
+      position:relative;
+      height:100dvh;
+      overflow:hidden;
+      display:grid;
+      grid-template-rows: 1fr auto;
+    }
+    .slides{
+      position:relative;
+      width:100%; height:100%;
+    }
+    .slide{
+      position:absolute; inset:0;
+      opacity:0; transform:translateX(30px) scale(.98);
+      transition:opacity .35s ease, transform .35s ease;
+      padding: clamp(24px, 6vw, 64px);
+      display:flex; flex-direction:column; justify-content:center; gap:24px;
+      background:
+        radial-gradient(1200px 800px at 85% 10%, #ffffff10 0%, #ffffff00 60%),
+        linear-gradient(0deg, #ffffff05, #ffffff00);
+    }
+    .slide.active{opacity:1; transform:none;}
+
+    h1{font-weight:800; font-size:clamp(36px, 6vw, 68px); margin:0; letter-spacing:.2px}
+    h2{font-weight:800; font-size:clamp(26px, 3.8vw, 40px); margin:0}
+    h3{font-weight:700; font-size:clamp(20px, 2.6vw, 28px); margin:.2em 0}
+    p{font-size:clamp(16px, 1.6vw, 20px); margin:.2em 0; color:var(--muted)}
+    ul{margin:0; padding-left:1.1em}
+    li{margin:.25em 0}
+
+    .brandbar{
+      display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    }
+    .brandbar img{height:42px}
+
+    .label{display:inline-block; padding:.35em .7em; border-radius:999px; font-weight:700; font-size:.9em; letter-spacing:.2px}
+    .label.orange{background:var(--accent-amber); color:var(--black)}
+    .label.blue{background:var(--accent-blue); color:var(--white)}
+    .label.teal{background:var(--accent-teal); color:var(--white)}
+
+    .card{
       background: var(--card);
-      border-radius: 16px;
-      padding: 20px 24px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.07);
+      color: var(--card-fg);
+      border-radius: 18px;
+      padding: clamp(16px, 3vw, 28px);
+      box-shadow: 0 10px 30px #00000044;
+      border: 1px solid #ffffff22;
     }
 
-    /* split layout */
-    .split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      align-items: center;
-    }
-    @media (max-width: 900px){
-      .split { grid-template-columns: 1fr; }
-    }
+    .row{display:flex; gap:20px; flex-wrap:wrap}
+    .col{flex:1 1 280px}
 
-    /* billeder */
-    .reveal img {
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    .cta{
+      display:inline-flex; align-items:center; gap:.6em;
+      background: var(--accent-blue);
+      color: var(--white);
+      border:none; border-radius: 14px;
+      padding: .8em 1.1em; font-weight:700; cursor:pointer;
     }
+    .cta.secondary{background:var(--accent-olive)}
+    .cta:focus-visible{outline:3px solid var(--accent-rose)}
 
-    /* callout badge */
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      color: #fff;
-      font: 600 12px/1 "Inter", sans-serif;
-      letter-spacing: .3px;
+    /* Nav */
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:10px 16px; background:#00000055; backdrop-filter: blur(6px);
+      border-top:1px solid #ffffff22;
     }
-
-    /* fast logo/branding i hjørnet – udskift src nedenfor */
-    .brandmark {
-      position: fixed; 
-      top: 14px; left: 14px; 
-      z-index: 9999; 
-      display:flex; align-items:center; gap:10px;
+    .nav-left, .nav-right{display:flex; align-items:center; gap:10px}
+    .nav .btn{
+      display:inline-flex; align-items:center; gap:.5em;
+      padding:.5em .8em; border-radius:12px; border:1px solid #ffffff33;
+      background:#ffffff10; color:var(--white); cursor:pointer; font-weight:700;
     }
-    .brandmark img { height: 28px; border-radius: 6px; box-shadow:none; }
-    .brandmark span { font: 700 13px/1 "Inter", sans-serif; color:#123; opacity:.7; }
+    .nav .btn:hover{background:#ffffff18}
 
-    /* footer / slide-nummer badge */
-    .reveal .slide-number {
-      background: rgba(0,0,0,.06);
-      border-radius: 10px;
-      padding: 6px 10px;
+    .arrow{height:22px; filter: invert(1) brightness(2)} /* gør pilen hvid */
+    .arrow.right{transform: rotate(180deg)}
+
+    .progress{height:8px; flex:1; background:#ffffff22; border-radius:999px; overflow:hidden}
+    .progress > span{display:block; height:100%; width:0%; background: linear-gradient(90deg,var(--accent-amber),var(--accent-rose));}
+
+    /* Inline gadgets */
+    .kbd{font-weight:700; padding:.1em .45em; border-radius:6px; border:1px solid #ffffff55; background:#ffffff10}
+
+    /* Vendespil */
+    .game-wrap{display:grid; grid-template-columns: 1.1fr 1fr; gap:24px; align-items:start}
+    .board{
+      --size: min(78vh, 860px);
+      display:grid; gap:10px; grid-template-columns: repeat(4, 1fr);
     }
+    .card-tile{
+      position:relative; aspect-ratio: 1/1; border-radius:16px; cursor:pointer; user-select:none;
+      transform-style: preserve-3d; transition: transform .35s ease;
+      border:1px solid #ffffff33; box-shadow: 0 8px 20px #00000033;
+      background: var(--primary-600);
+    }
+    .card-tile.flipped{transform: rotateY(180deg)}
+    .face{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      padding:12px; border-radius:16px; backface-visibility:hidden;
+      text-align:center;
+    }
+    .face.front{
+      background: linear-gradient(145deg, var(--primary-600), var(--primary-500));
+      color: var(--white);
+      font-weight:800; font-size: clamp(16px, 1.4vw, 20px);
+    }
+    .face.back{
+      transform: rotateY(180deg);
+      background: linear-gradient(160deg, var(--accent-sand), var(--accent-terracotta));
+      color: var(--black);
+      font-weight:700; font-size: clamp(14px, 1.2vw, 18px);
+    }
+    .stats{display:flex; gap:10px; flex-wrap:wrap}
+    .pill{background:#ffffff10; border:1px solid #ffffff33; border-radius:999px; padding:.45em .8em; font-weight:700}
 
-    /* mikro-animation til hover */
-    @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-6px)} }
-    .floaty:hover { animation: float 2s ease-in-out infinite; }
+    .legend{display:flex; gap:10px; flex-wrap:wrap}
+    .legend span{display:inline-flex; align-items:center; gap:.4em; padding:.35em .6em; border-radius:999px; font-weight:700}
+    .legend .type{background:var(--accent-blue); color:var(--white)}
+    .legend .def{background:var(--accent-amber); color:var(--black)}
+
+    .notice{font-size:.95em; color:var(--muted)}
+
+    @media (max-width: 980px){
+      .game-wrap{grid-template-columns: 1fr;}
+      .board{grid-template-columns: repeat(4, 1fr);}
+    }
   </style>
 </head>
 <body>
+  <div class="deck" id="deck">
+    <main class="slides" id="slides">
 
-<!-- Logo/branding – skift kilde hvis du vil -->
-<div class="brandmark">
-  <img src="https://learninglib.org/wp-content/uploads/2022/11/AUB-logo-da-1.png" alt="AUB">
-  <span>Interaktive Slides</span>
-</div>
-
-<div class="reveal">
-  <div class="slides">
-
-    <!-- 1: Titel -->
-    <section data-background-color="#eaf4ff">
-      <span class="badge">LIVE • Reveal.js</span>
-      <h2 style="margin-top:12px">AI & Læring – Interaktive demo-slides</h2>
-      <p>Brug <kbd>←</kbd> og <kbd>→</kbd> til at navigere • <kbd>F</kbd> for fuldskærm</p>
-      <p><small>Skabelon: nordic minimal – farver, typografi og layout kan tilpasses.</small></p>
-    </section>
-
-    <!-- 2: Fragmenter (trinvis visning) -->
-    <section>
-      <h2>Hvorfor web-baserede slides?</h2>
-      <ul>
-        <li class="fragment">Kan hostes gratis på <strong>GitHub Pages</strong></li>
-        <li class="fragment">Indlejrer <strong>interaktive</strong> elementer (afstemning, spil, video)</li>
-        <li class="fragment">Nem deling via <strong>URL</strong> – også på mobil</li>
-        <li class="fragment">Fuld kontrol over <strong>design og data</strong></li>
-      </ul>
-    </section>
-
-    <!-- 3: Split layout (tekst + billede) -->
-    <section>
-      <h2>Designprincipper</h2>
-      <div class="split">
-        <div class="card">
-          <ol style="margin:0">
-            <li><strong>Én idé per slide.</strong></li>
-            <li><strong>Kontrast & typografi</strong> – læsbarhed først.</li>
-            <li><strong>Rytme</strong> – skift mellem oplæg og aktivitet.</li>
-            <li><strong>Interaktion</strong> – spørg, stem, byg sammen.</li>
-          </ol>
+      <!-- Slide 1: Titel -->
+      <section class="slide active" data-index="0">
+        <div class="brandbar">
+          <img alt="AUB logo" src="https://learninglib.org/wp-content/uploads/2025/10/AUB-logo-da-1.png"/>
+          <img alt="AAU Center" src="https://learninglib.org/wp-content/uploads/2025/10/AAU_CENTER_WHITE.png"/>
+          <span class="label blue">Team Informationskompetence</span>
         </div>
-        <div>
-          <img class="floaty" src="https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1600&auto=format&fit=crop" alt="abstract" />
+        <h1>Interaktive undervisningsslides</h1>
+        <h3>Barlow-typografi · Til GitHub Pages · Indbygget vendespil</h3>
+        <div class="row">
+          <div class="col card">
+            <h3>Brug</h3>
+            <ul>
+              <li>Navigér med <span class="kbd">←</span> / <span class="kbd">→</span> eller knapperne nederst.</li>
+              <li>Tryk <span class="kbd">F</span> for fuldskærm.</li>
+              <li>Vendespil findes i slutningen.</li>
+            </ul>
+          </div>
+          <div class="col card" style="background:linear-gradient(135deg,var(--accent-rose),var(--accent-amber)); color:var(--black)">
+            <h3>Formål</h3>
+            <p>Live, interaktive slides der kan hostes som statisk side (GitHub Pages). Ingen eksterne JS-biblioteker – kun HTML/CSS/JS.</p>
+          </div>
         </div>
+        <div style="display:flex; gap:18px; align-items:center; flex-wrap:wrap">
+          <img src="https://learninglib.org/wp-content/uploads/2025/10/COLOURBOX68255171-ezgif.com-gif-maker.gif" alt="konfetti" style="height:56px; border-radius:10px; border:1px solid #ffffff33"/>
+          <img src="https://learninglib.org/wp-content/uploads/2025/10/search-1508_256.gif" alt="søge-ikon" style="height:56px; border-radius:10px; border:1px solid #ffffff33"/>
+        </div>
+      </section>
+
+      <!-- Slide 2: Læringsmål -->
+      <section class="slide" data-index="1">
+        <span class="label orange">Læringsmål</span>
+        <h2>Når vi er færdige, kan du…</h2>
+        <ul>
+          <li>Navigere i slides og indlejrede aktiviteter.</li>
+          <li>Forklare forskelle mellem publikations<strong>typer</strong>.</li>
+          <li>Matche type og definition i et vendespil.</li>
+        </ul>
+        <div class="legend" aria-hidden="true">
+          <span class="type">TYPE</span>
+          <span class="def">DEFINITION</span>
+        </div>
+      </section>
+
+      <!-- Slide 3: Aktivitet -->
+      <section class="slide" data-index="2">
+        <span class="label teal">Aktivitet</span>
+        <h2>Hurtig refleksion</h2>
+        <div class="row">
+          <div class="col card">
+            <h3>Skriv et eksempel</h3>
+            <p>Notér en publikations<strong>type</strong>, du selv bruger (fx “konferencepaper”).</p>
+            <textarea id="note" rows="5" style="width:100%; border-radius:12px; border:1px solid #ffffff44; background:#ffffff10; color:var(--white); padding:12px"></textarea>
+            <div style="margin-top:10px; display:flex; gap:10px">
+              <button class="cta" onclick="saveNote()">Gem note</button>
+              <button class="cta secondary" onclick="loadNote()">Hent note</button>
+            </div>
+            <p class="notice">Tip: Noten gemmes lokalt i din browser (localStorage).</p>
+          </div>
+          <div class="col card" style="background:linear-gradient(120deg,var(--primary-600),var(--primary-500))">
+            <h3>Del mundtligt</h3>
+            <ul>
+              <li>Hvilke kendetegn har din type?</li>
+              <li>Hvor finder du den (database/web)?</li>
+              <li>Hvordan vurderer du kvaliteten?</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Vendespil -->
+      <section class="slide" data-index="3">
+        <span class="label blue">Spil</span>
+        <h2>Vendespil: Match publikations<strong>type</strong> og <strong>definition</strong></h2>
+        <div class="game-wrap">
+          <div class="card">
+            <div class="stats">
+              <span class="pill" id="moves">Træk: 0</span>
+              <span class="pill" id="time">Tid: 00:00</span>
+              <span class="pill" id="found">Par: 0/8</span>
+            </div>
+            <div style="margin:10px 0; display:flex; gap:10px; flex-wrap:wrap">
+              <button class="cta" onclick="resetGame()">Nulstil spil</button>
+              <button class="cta secondary" onclick="revealAll(1200)">Hint (vis kort kortvarigt)</button>
+            </div>
+            <div class="board" id="board" aria-label="Vendespil bræt"></div>
+            <p class="notice">Sådan spiller du: Vend to kort. Et rigtigt match er en <strong>type</strong> og dens <strong>definition</strong>. Find alle 8 par så hurtigt som muligt.</p>
+          </div>
+          <div class="card" style="background:linear-gradient(135deg,var(--accent-rose),var(--accent-amber)); color:var(--black)">
+            <h3>Par i spillet</h3>
+            <ul>
+              <li>Fagfællebedømt artikel</li>
+              <li>Konferencepaper</li>
+              <li>Bog</li>
+              <li>Bogkapitel</li>
+              <li>Ph.d.-afhandling</li>
+              <li>Rapport</li>
+              <li>Datasæt</li>
+              <li>Webside</li>
+            </ul>
+            <p class="notice">Definitionerne er korte og generiske – tilpas gerne til din kontekst.</p>
+            <img src="https://learninglib.org/wp-content/uploads/2025/10/left-arrow-5330_256.gif" alt="venstre pil" class="arrow" style="height:32px; margin-top:6px">
+            <img src="https://learninglib.org/wp-content/uploads/2025/10/left-arrow-5330_256.gif" alt="højre pil" class="arrow right" style="height:32px; margin-top:6px">
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Tak -->
+      <section class="slide" data-index="4">
+        <h2>Tak for i dag!</h2>
+        <p>Slides kan hostes på GitHub Pages. Upload blot denne <code>index.html</code> i et repo og aktiver Pages.</p>
+        <div class="brandbar">
+          <img alt="AUB logo" src="https://learninglib.org/wp-content/uploads/2025/10/AUB-logo-da-1.png"/>
+          <img alt="AAU Center" src="https://learninglib.org/wp-content/uploads/2025/10/AAU_CENTER_WHITE.png"/>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Nav bar -->
+    <footer class="nav" role="navigation" aria-label="Slide navigation">
+      <div class="nav-left">
+        <button class="btn" id="prevBtn"><img class="arrow" alt="tilbage" src="https://learninglib.org/wp-content/uploads/2025/10/left-arrow-5330_256.gif"> Forrige</button>
+        <button class="btn" id="nextBtn">Næste <img class="arrow right" alt="næste" src="https://learninglib.org/wp-content/uploads/2025/10/left-arrow-5330_256.gif"></button>
       </div>
-    </section>
-
-    <!-- 4: Embed – erstat src med din tjeneste -->
-    <section data-background-color="#f7fbff">
-      <h2>Indlejret live-element</h2>
-      <p><small>Erstat <code>src</code> med Mentimeter, Slido, Microsoft Forms, YouTube – eller dit eget HTML-spil.</small></p>
-      <iframe
-        src="https://forms.office.com/"
-        title="Embedded live widget"
-        style="width:100%; height:62vh; border:none; border-radius:14px; background:#fff;">
-      </iframe>
-    </section>
-
-    <!-- 5: Markdown slide (hurtig forfatteroplevelse) -->
-    <section data-markdown>
-<textarea data-template>
-## Slide skrevet i **Markdown**
-- Hurtigt at skrive
-- Let at redigere undervejs
-- Understøtter **bold**, _italic_, lister, links osv.
-
-> Tip: Brug Markdown til indhold – behold HTML til layout og design.
-</textarea>
-    </section>
-
-    <!-- 6: Baggrundsbillede + farveoverlay -->
-    <section 
-      data-background-image="https://images.unsplash.com/photo-1526378722484-bd91ca387e72?q=80&w=1600&auto=format&fit=crop"
-      data-background-size="cover"
-      data-background-opacity="0.12"
-      data-background-color="#0a5ea8">
-      <h2 style="color:#fff">Baggrundsbillede som stemningsbærer</h2>
-      <p style="color:#e9f2ff">Brug sparsomme billeder og høj kontrast på tekst.</p>
-    </section>
-
-    <!-- 7: Afslutning -->
-    <section>
-      <h2>Tak! 🚀</h2>
-      <p>Slides hostes via <strong>GitHub Pages</strong>. Tilpas farver, skrifter og layout for din egen identitet.</p>
-      <p><small>Kilde: Reveal.js • Tema: custom “nordic minimal”.</small></p>
-    </section>
-
+      <div class="progress" aria-hidden="true"><span id="progBar"></span></div>
+      <div class="nav-right">
+        <button class="btn" id="fsBtn">Fuldskærm <span class="kbd">F</span></button>
+        <span class="label orange" id="slideCounter">1 / 5</span>
+      </div>
+    </footer>
   </div>
-</div>
 
-<!-- Reveal.js JS + plugins -->
-<script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
-<script src="https://unpkg.com/reveal.js/plugin/markdown/markdown.js"></script>
-<script src="https://unpkg.com/reveal.js/plugin/notes/notes.js"></script>
+  <script>
+    // —— Slides: keyboard + buttons ——
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let index = 0;
+    const progBar = document.getElementById('progBar');
+    const slideCounter = document.getElementById('slideCounter');
 
-<script>
-  Reveal.initialize({
-    hash: true,
-    slideNumber: true,
-    transition: 'fade',
-    plugins: [ RevealMarkdown, RevealNotes ],
-    // justér marginer hvis du vil have mere "luft"
-    margin: 0.08
-  });
-</script>
+    function show(i){
+      index = Math.max(0, Math.min(slides.length-1, i));
+      slides.forEach((s,idx)=> s.classList.toggle('active', idx===index));
+      const pct = ((index)/(slides.length-1))*100;
+      progBar.style.width = pct + '%';
+      slideCounter.textContent = (index+1) + ' / ' + slides.length;
+    }
 
+    document.getElementById('prevBtn').addEventListener('click', ()=>show(index-1));
+    document.getElementById('nextBtn').addEventListener('click', ()=>show(index+1));
+
+    window.addEventListener('keydown', (e)=>{
+      if(e.key==='ArrowRight') show(index+1);
+      if(e.key==='ArrowLeft') show(index-1);
+      if(e.key.toLowerCase()==='f') toggleFullscreen();
+    });
+
+    function toggleFullscreen(){
+      const el = document.documentElement;
+      if(!document.fullscreenElement){ el.requestFullscreen?.(); }
+      else{ document.exitFullscreen?.(); }
+    }
+    document.getElementById('fsBtn').addEventListener('click', toggleFullscreen);
+
+    // —— Note (localStorage) ——
+    function saveNote(){
+      localStorage.setItem('slide-note', document.getElementById('note').value || '');
+    }
+    function loadNote(){
+      document.getElementById('note').value = localStorage.getItem('slide-note') || '';
+    }
+    window.saveNote = saveNote; window.loadNote = loadNote;
+
+    // —— Vendespil (type ↔ definition) ——
+    const pairs = [
+      {id:'article', type:'Fagfællebedømt artikel', def:'Videnskabelig artikel fra tidsskrift, vurderet af fagfæller før udgivelse.'},
+      {id:'conf', type:'Konferencepaper', def:'Kortere artikel præsenteret på faglig konference; ofte hurtigere publicering.'},
+      {id:'book', type:'Bog', def:'Sammenhængende værk med forlag; varierer fra introduktion til dybdegående monografi.'},
+      {id:'chapter', type:'Bogkapitel', def:'Kapitel i redigeret bog; ofte med referencesektion og redaktionel kvalitetssikring.'},
+      {id:'thesis', type:'Ph.d.-afhandling', def:'Selvstændigt forskningsarbejde, bedømt af bedømmelsesudvalg; lang og detaljeret.'},
+      {id:'report', type:'Rapport', def:'Teknisk/forvaltningsmæssig publikation; fx myndigheder, organisationer eller firmaer.'},
+      {id:'dataset', type:'Datasæt', def:'Struktureret dataudgivelse; ledsaget af metadata og ofte DOI.'},
+      {id:'web', type:'Webside', def:'Online indhold med varierende kvalitet; tjek dato, afsender og formål.'},
+    ];
+
+    let flipped = []; // aktive viste kort
+    let found = new Set();
+    let lock = false;
+    let moves = 0; let startTime = null; let timerId = null;
+
+    const movesEl = document.getElementById('moves');
+    const timeEl = document.getElementById('time');
+    const foundEl = document.getElementById('found');
+    const boardEl = document.getElementById('board');
+
+    function formatTime(ms){
+      const s = Math.floor(ms/1000); const m = Math.floor(s/60); const r = s%60;
+      return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0');
+    }
+
+    function startTimer(){
+      if(startTime) return; startTime = Date.now();
+      timerId = setInterval(()=>{ timeEl.textContent = 'Tid: ' + formatTime(Date.now()-startTime); }, 250);
+    }
+
+    function stopTimer(){ clearInterval(timerId); timerId=null; }
+
+    function shuffle(arr){
+      for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+      return arr;
+    }
+
+    function buildDeck(){
+      // Lav to kort pr. par: ét TYPE-kort (for) og ét DEF-kort (back)
+      const cards = [];
+      for(const p of pairs){
+        cards.push({ key:p.id+'-t', pair:p.id, face:'type', text:p.type });
+        cards.push({ key:p.id+'-d', pair:p.id, face:'def', text:p.def });
+      }
+      return shuffle(cards);
+    }
+
+    function renderBoard(){
+      const cards = buildDeck();
+      boardEl.innerHTML = '';
+      cards.forEach((c, idx)=>{
+        const tile = document.createElement('button');
+        tile.className='card-tile';
+        tile.setAttribute('data-key', c.key);
+        tile.setAttribute('data-pair', c.pair);
+        tile.setAttribute('data-face', c.face);
+        tile.setAttribute('aria-label', c.face==='type' ? ('Type: '+c.text) : 'Definition');
+        tile.innerHTML = `
+          <div class="face front">${c.face==='type' ? c.text : 'Definition'}</div>
+          <div class="face back">${c.text}</div>
+        `;
+        tile.addEventListener('click', ()=> onFlip(tile));
+        boardEl.appendChild(tile);
+      });
+    }
+
+    function onFlip(tile){
+      if(lock) return;
+      const key = tile.dataset.key;
+      if(found.has(tile.dataset.pair)) return; // allerede fundet
+      if(flipped.find(t=>t.dataset.key===key)) return; // samme kort
+
+      startTimer();
+      tile.classList.add('flipped');
+      flipped.push(tile);
+
+      if(flipped.length===2){
+        moves++; movesEl.textContent = 'Træk: ' + moves;
+        lock = true;
+        const [a,b]=flipped; const isMatch = a.dataset.pair===b.dataset.pair && a.dataset.face!==b.dataset.face;
+        setTimeout(()=>{
+          if(isMatch){
+            found.add(a.dataset.pair);
+            a.style.outline = '3px solid var(--accent-teal)';
+            b.style.outline = '3px solid var(--accent-teal)';
+            a.setAttribute('aria-hidden','true'); b.setAttribute('aria-hidden','true');
+            foundEl.textContent = 'Par: ' + found.size + '/8';
+            if(found.size===pairs.length){ stopTimer(); celebrate(); }
+          }else{
+            a.classList.remove('flipped'); b.classList.remove('flipped');
+          }
+          flipped = []; lock = false;
+        }, 520);
+      }
+    }
+
+    function celebrate(){
+      // Lille konfetti-effekt med eksisterende gif
+      const img = document.createElement('img');
+      img.src = 'https://learninglib.org/wp-content/uploads/2025/10/COLOURBOX68255171-ezgif.com-gif-maker.gif';
+      img.alt = 'Konfetti';
+      img.style.position='fixed'; img.style.right='16px'; img.style.bottom='16px'; img.style.height='80px';
+      img.style.borderRadius='10px'; img.style.border='1px solid #ffffff55';
+      document.body.appendChild(img);
+      setTimeout(()=> img.remove(), 4000);
+    }
+
+    function resetGame(){
+      flipped = []; found.clear(); lock=false; moves=0; startTime=null; if(timerId) stopTimer();
+      movesEl.textContent = 'Træk: 0'; timeEl.textContent = 'Tid: 00:00'; foundEl.textContent = 'Par: 0/8';
+      renderBoard(); revealAll(900);
+    }
+
+    function revealAll(ms=800){
+      const tiles = Array.from(document.querySelectorAll('.card-tile'));
+      tiles.forEach(t=> t.classList.add('flipped'));
+      setTimeout(()=> tiles.forEach(t=> t.classList.remove('flipped')), ms);
+    }
+
+    // Init
+    renderBoard();
+
+    // Eksponer reset/hint globalt
+    window.resetGame = resetGame; window.revealAll = revealAll;
+
+    // Start på første slide
+    show(0);
+  </script>
 </body>
 </html>

@@ -1,297 +1,807 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AUB 50-års jubilæum – Interaktive slides</title>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      /* Tilladte farver */
-      --p900:#211a52; /* dyb indigo */
-      --p600:#594fbf; /* violet */
-      --p500:#54616e; /* skifergrå */
-      --amber:#df8e2e; --terra:#a16547; --rust:#bb5b17; --olive:#97701f;
-      --blue:#007fa3; --teal:#0e8563; --rose:#e78293; --sand:#cc8b66;
-      --black:#000; --white:#fff;
-
-      --bg: var(--p900);
-      --fg: var(--white);
-      --muted:#ffffffcc; /* hvid m. alfa */
-      --card: var(--p500); --card-fg: var(--white);
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0; font-family:'Barlow',system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--fg);}
-
-    /* Deck & slides */
-    .deck{position:relative; min-height:100dvh; display:grid; grid-template-rows:1fr auto}
-    .slides{position:relative}
-    .slide{position:absolute; inset:0; opacity:0; transform:translateX(24px) scale(.98); transition:opacity .35s ease, transform .35s ease; padding:clamp(20px,6vw,64px); display:flex; flex-direction:column; justify-content:center; gap:20px; background:linear-gradient(0deg,#ffffff0a,#ffffff00); pointer-events:none; z-index:0}
-    .slide.active{opacity:1; transform:none; pointer-events:auto; z-index:2}
-
-    h1{font-size:clamp(36px,6vw,72px); font-weight:800; margin:0}
-    h2{font-size:clamp(26px,4vw,42px); font-weight:800; margin:0}
-    h3{font-size:clamp(18px,2.6vw,26px); font-weight:700; margin:.2em 0}
-    p{font-size:clamp(16px,1.6vw,20px); color:var(--muted); margin:.2em 0}
-    ul{margin:0; padding-left:1.1em}
-
-    .row{display:flex; gap:18px; flex-wrap:wrap}
-    .col{flex:1 1 280px}
-
-    .brandbar{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
-    .brandbar img{height:44px}
-
-    .label{display:inline-block; padding:.35em .7em; border-radius:999px; font-weight:700; letter-spacing:.2px}
-    .l-blue{background:var(--blue); color:var(--white)}
-    .l-amber{background:var(--amber); color:var(--black)}
-    .l-teal{background:var(--teal); color:var(--white)}
-
-    .card{background:var(--card); color:var(--card-fg); border-radius:18px; padding:clamp(14px,2.8vw,28px); border:1px solid #ffffff22; box-shadow:0 10px 30px #0006}
-
-    .btn{display:inline-flex; align-items:center; gap:.6em; background:var(--blue); color:var(--white); border:none; border-radius:14px; padding:.8em 1.1em; font-weight:700; cursor:pointer}
-    .btn.alt{background:var(--olive)}
-
-    .kbd{font-weight:700; padding:.1em .45em; border-radius:6px; border:1px solid #ffffff55; background:#ffffff10}
-
-    /* Footer nav */
-    footer.nav{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; background:#0008; border-top:1px solid #ffffff22}
-    .btn-nav{display:inline-flex; align-items:center; gap:.5em; padding:.55em .9em; border-radius:12px; border:1px solid #ffffff33; background:#ffffff10; color:var(--white); font-weight:700; cursor:pointer}
-    .btn-nav:hover{background:#ffffff18}
-    .progress{height:8px; flex:1; background:#ffffff22; border-radius:999px; overflow:hidden}
-    .progress>span{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--amber), var(--rose))}
-
-    /* Quiz */
-    .quiz{display:grid; gap:16px}
-    .q{background:var(--p500); border:1px solid #ffffff33; border-radius:14px; padding:14px}
-    .q h4{margin:.1em 0; font-size:1.05rem}
-    .opts{display:grid; gap:10px; margin-top:10px}
-    .opt{display:flex; gap:10px; align-items:flex-start; background:#ffffff10; border:1px solid #ffffff22; border-radius:12px; padding:10px; cursor:pointer}
-    .opt input{margin-top:.25em}
-    .correct{border-color:var(--teal)}
-    .wrong{border-color:var(--rust)}
-    .pill{background:#ffffff10; border:1px solid #ffffff33; border-radius:999px; padding:.45em .8em; font-weight:700}
-
-    /* Helpers */
-    .muted{color:var(--muted)}
-    .accent{color:var(--amber)}
-
-    @media (max-width:960px){
-      .brandbar img{height:36px}
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Medialogi 2. sem — HCI & informationssøgning (AAUB)</title>
+<style>
+  /* ===== Designsystem (AUB/AAU, lokal og uden eksterne libs) ===== */
+  :root{
+    --clr-bg:#FFFFFF;
+    --clr-ink:#211a52;              /* Primær */
+    --clr-ink-weak:#42406b;
+    --clr-accent:#594fbf;           /* Accent */
+    --clr-sec1:#df8e2e;             /* Sekundær */
+    --clr-sec2:#007fa3;             /* Sekundær */
+    --clr-surface:#f5f6ff;
+    --clr-surface-2:#eef2ff;
+    --clr-border:#d6d8f0;
+    --radius:16px;
+    --radius-lg:20px;
+    --pad:20px;
+    --shadow:0 6px 24px rgba(33,26,82,.12);
+    --focus: 0 0 0 3px #fff, 0 0 0 6px var(--clr-sec2);
+    --font:"Barlow", Arial, sans-serif;
+    --font-bold:700;
+    --font-xbold:800;
+  }
+  html,body{height:100%}
+  body{
+    margin:0; font-family:var(--font); color:var(--clr-ink);
+    background:var(--clr-bg); -webkit-font-smoothing:antialiased;
+  }
+  /* ===== Layout: slides ===== */
+  .deck{
+    position:relative; height:100dvh; overflow:hidden;
+    display:grid; grid-template-rows: auto 1fr auto;
+  }
+  header.appbar{
+    display:flex; align-items:center; gap:10px; padding:8px 12px;
+    border-bottom:1px solid var(--clr-border); background:var(--clr-surface);
+  }
+  .brand{display:flex; align-items:center; gap:8px}
+  .brand img{height:28px; width:auto; border-radius:8px; background:#fff}
+  .brand .title{
+    font-weight:var(--font-xbold); letter-spacing:.3px; font-size:16px; line-height:1.2
+  }
+  .controls{margin-left:auto; display:flex; gap:8px; align-items:center}
+  button, .btn{
+    font-family:var(--font); border:1px solid var(--clr-border); background:#fff;
+    padding:10px 20px; border-radius:999px; cursor:pointer; box-shadow:var(--shadow);
+    transition:transform .05s ease, box-shadow .2s ease; font-weight:600
+  }
+  button:hover{transform:translateY(-1px)}
+  button:focus-visible{outline:none; box-shadow:var(--focus)}
+  .btn-primary{background:var(--clr-accent); color:#fff; border-color:transparent}
+  .btn-ghost{background:transparent; border-color:var(--clr-border)}
+  .counter{font-variant-numeric:tabular-nums; font-weight:700}
+  main.viewport{position:relative; overflow:hidden}
+  .slides{
+    display:flex; height:100%; width:100%; transition:transform .35s ease;
+    touch-action:pan-y; will-change:transform;
+  }
+  section.slide{
+    flex:0 0 100%; overflow:auto; padding:32px clamp(16px,4vw,48px);
+    display:grid; align-content:flex-start; gap:16px; background:var(--clr-bg)
+  }
+  section.slide h1, section.slide h2{
+    margin:0 0 8px 0; line-height:1.15; letter-spacing:.2px
+  }
+  .h0{font-size:clamp(28px,4.6vw,44px); font-weight:var(--font-xbold)}
+  .h1{font-size:clamp(22px,3.8vw,30px); font-weight:var(--font-xbold)}
+  .h2{font-size:clamp(18px,3vw,22px); font-weight:var(--font-bold); color:var(--clr-ink)}
+  p, li{font-size:clamp(15px,1.8vw,18px); line-height:1.6; color:var(--clr-ink-weak)}
+  .lead{font-size:clamp(17px,2vw,20px); color:var(--clr-ink)}
+  .card{
+    background:var(--clr-surface); border:1px solid var(--clr-border);
+    border-radius:var(--radius-lg); padding:var(--pad); box-shadow:var(--shadow)
+  }
+  .grid{display:grid; gap:16px}
+  .grid.cols-2{grid-template-columns:repeat(2, minmax(0,1fr))}
+  .grid.cols-3{grid-template-columns:repeat(3, minmax(0,1fr))}
+  @media (max-width:900px){ .grid.cols-2,.grid.cols-3{grid-template-columns:1fr} }
+  .pill{display:inline-block; padding:6px 12px; border-radius:999px; background:var(--clr-surface-2); border:1px solid var(--clr-border); font-weight:600}
+  .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#fff; border:1px solid var(--clr-border); border-bottom-width:2px; padding:.1rem .4rem; border-radius:6px}
+  /* Progress */
+  .progress{height:6px; background:linear-gradient(90deg, var(--clr-sec2), var(--clr-sec1)); width:0%}
+  footer.toolbar{
+    display:flex; gap:10px; align-items:center; padding:8px 12px; border-top:1px solid var(--clr-border); background:#fff
+  }
+  .spacer{flex:1}
+  /* Help overlay */
+  .help{
+    position:fixed; inset:0; background:rgba(33,26,82,.72); color:#fff; display:none;
+    align-items:center; justify-content:center; z-index:50; padding:24px
+  }
+  .help[aria-hidden="false"]{display:flex}
+  .help .panel{
+    max-width:min(900px, 92vw); background:#0f0e28; border-radius:20px; padding:24px; border:1px solid rgba(255,255,255,.15)
+  }
+  .help h2{color:#fff}
+  .help li{color:#e8e8ff}
+  /* Focus outlines for all interactive elements */
+  a, button, input, select, textarea, [tabindex] {outline:none}
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible{box-shadow:var(--focus)}
+  /* ===== Web components base ===== */
+  .wc h3{margin:.2rem 0 .6rem 0}
+  .wc .actions{display:flex; gap:8px; flex-wrap:wrap}
+  .score{font-weight:800}
+  /* ===== Quiz ===== */
+  .quiz .q{margin:.6rem 0; padding:.6rem .8rem; border-radius:12px; border:1px solid var(--clr-border); background:#fff}
+  .quiz .opt{display:block; padding:.5rem .6rem; border-radius:12px; border:1px solid var(--clr-border); margin:.4rem 0; cursor:pointer}
+  .quiz .opt[aria-checked="true"]{border-color:var(--clr-sec2); background:#eef7fb}
+  .quiz .opt.correct{border-color:#2e7d32; background:#e8f5e9}
+  .quiz .opt.wrong{border-color:#b00020; background:#ffebee}
+  .quiz .feedback{font-size:.95rem; margin-top:.4rem}
+  /* ===== DragDrop ===== */
+  .dd-container{display:grid; gap:16px}
+  .dd-lists{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .dd-col{background:#fff; border:1px dashed var(--clr-border); padding:12px; border-radius:12px; min-height:180px}
+  .token{
+    display:inline-flex; align-items:center; gap:6px; padding:8px 12px; background:var(--clr-surface-2); border:1px solid var(--clr-border); border-radius:999px; margin:6px; cursor:grab
+  }
+  .token:focus-visible{box-shadow:var(--focus)}
+  .drop{padding:10px; border-radius:12px; min-height:52px; background:var(--clr-surface); border:2px dashed var(--clr-border)}
+  .drop.matched{border-color:#2e7d32; background:#e8f5e9}
+  .drop.wrong{border-color:#b00020; background:#ffebee}
+  .dd-keyboard{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+  /* ===== Query Builder ===== */
+  .qb-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:.4rem 0}
+  .qb input[type="text"]{padding:10px 12px; border:1px solid var(--clr-border); border-radius:10px; min-width:160px}
+  .qb select{padding:10px 12px; border:1px solid var(--clr-border); border-radius:10px}
+  .qb .out{font-family:ui-monospace, monospace; background:#0b1026; color:#e8e8ff; padding:12px; border-radius:12px; overflow:auto}
+  /* ===== SUS ===== */
+  .sus table{border-collapse:separate; border-spacing:0; width:100%}
+  .sus th, .sus td{border:1px solid var(--clr-border); padding:8px 10px}
+  .sus th{background:var(--clr-surface)}
+  .sus .scorebox{font-size:1.1rem; font-weight:800; padding:.6rem 1rem; border-radius:12px; background:var(--clr-surface)}
+  /* ===== Utilities ===== */
+  .note{font-size:.92rem; color:#4a4a7a}
+  .badges{display:flex; flex-wrap:wrap; gap:8px}
+  .imgfit{width:100%; max-height:50vh; object-fit:cover; border-radius:16px; border:1px solid var(--clr-border)}
+  /* Print */
+  @media print{
+    header.appbar, footer.toolbar, .help{display:none !important}
+    .deck{grid-template-rows: 1fr}
+    .slides{display:block; transform:none !important}
+    section.slide{break-inside:avoid; page-break-inside:avoid; border:0; box-shadow:none; padding:20px}
+    .card{box-shadow:none}
+    .slide::after{content: attr(data-title) " — " counter(slide) "/" attr(data-count); display:block; text-align:right; color:#555; font-size:12px}
+  }
+</style>
 </head>
 <body>
-  <div class="deck" id="deck">
-    <main class="slides" id="slides">
-
-      <!-- Slide 1: Titel / Velkomst -->
-      <section class="slide active" data-index="0">
-        <div class="brandbar">
-          <img alt="AUB logo" src="https://learninglib.org/wp-content/uploads/2025/10/AUB-logo-da-1.png"/>
-          <img alt="AAU Center" src="https://learninglib.org/wp-content/uploads/2025/10/AAU_CENTER_WHITE.png"/>
-          <span class="label l-blue">Team Informationskompetence</span>
-        </div>
-        <h1>Vi fejrer bibliotekets <span class="accent">50 år</span>!</h1>
-        <p>Kom og besøg os i vores stande i dag, hvor vi fortæller om, hvad vi kan tilbyde dig.</p>
-        <div class="row">
-          <div class="col card">
-            <h3>Sådan bruger du slides</h3>
-            <ul>
-              <li>Navigér med <span class="kbd">←</span>/<span class="kbd">→</span> eller knapperne nederst.</li>
-              <li>Tryk <span class="kbd">F</span> for fuldskærm.</li>
-              <li>Denne version er klar til GitHub Pages – gem som <code>index.html</code>.</li>
-            </ul>
-          </div>
-          <div class="col card" style="background:linear-gradient(135deg,var(--rose),var(--amber)); color:var(--black)">
-            <h3>Kort overblik</h3>
-            <ul>
-              <li>Rundvisning – studiepladser og grupperum</li>
-              <li>Prøv <strong>Primo Research Assistant</strong></li>
-              <li>Book 1-times vejledning</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 2: Rundvisning -->
-      <section class="slide" data-index="1">
-        <span class="label l-amber">Guided tour</span>
-        <h2>Kort rundvisning</h2>
-        <div class="row">
-          <div class="col card">
-            <h3>Vi viser dig</h3>
-            <ul>
-              <li>Gode studiepladser</li>
-              <li>Grupperum</li>
-            </ul>
-          </div>
-          <div class="col card">
-            <h3>Spørg undervejs</h3>
-            <p>Du kan altid spørge os – både her på biblioteket og online.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 3: Primo Research Assistant -->
-      <section class="slide" data-index="2">
-        <span class="label l-teal">AI i praksis</span>
-        <h2>Prøv Primo Research Assistant</h2>
-        <p>Få hjælp af AI til at finde akademiske kilder og litteratur.</p>
-        <div class="row">
-          <div class="col card">
-            <h3>Fordele</h3>
-            <ul>
-              <li>Idéer til søgeord og emneafgrænsning</li>
-              <li>Hurtig vej til relevante databaser</li>
-            </ul>
-          </div>
-          <div class="col card">
-            <h3>Tip</h3>
-            <p>Brug altid kildekritik: afsender, formål, dokumentation og dato.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 4: Book vejledning -->
-      <section class="slide" data-index="3">
-        <span class="label l-blue">Guidance</span>
-        <h2>Sådan booker du en vejledning</h2>
-        <div class="row">
-          <div class="col card">
-            <h3>Tilpasset dit projekt</h3>
-            <ul>
-              <li><strong>1-times vejledning</strong> – alene eller som gruppe</li>
-              <li>Fokus på søgestrategi, databaser og referencehåndtering</li>
-            </ul>
-          </div>
-          <div class="col card">
-            <h3>Hvor?</h3>
-            <p>Her på biblioteket eller online – alt efter hvad der passer dig.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 5: Quiz (multiple choice) -->
-      <section class="slide" data-index="4">
-        <span class="label l-amber">Quiz</span>
-        <h2>50-års fødselsdags-quiz</h2>
-        <p class="muted">Vælg ét svar per spørgsmål og tryk “Tjek svar”.</p>
-        <div class="quiz" id="quiz"></div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px">
-          <button class="btn" id="checkBtn">Tjek svar</button>
-          <button class="btn alt" id="resetBtn">Nulstil</button>
-          <span class="pill" id="score">Score: 0/5</span>
-        </div>
-      </section>
-
-      <!-- Slide 6: Tak -->
-      <section class="slide" data-index="5">
-        <h2>Tak for i dag!</h2>
-        <p>Du kan altid spørge os – både her på biblioteket og online.</p>
-        <div class="brandbar">
-          <img alt="AUB logo" src="https://learninglib.org/wp-content/uploads/2025/10/AUB-logo-da-1.png"/>
-          <img alt="AAU Center" src="https://learninglib.org/wp-content/uploads/2025/10/AAU_CENTER_WHITE.png"/>
-        </div>
-      </section>
-
-    </main>
-
-    <footer class="nav" role="navigation" aria-label="Slide navigation">
-      <button class="btn-nav" id="prev">← Forrige</button>
-      <div class="progress"><span id="prog"></span></div>
-      <div style="display:flex; align-items:center; gap:8px">
-        <button class="btn-nav" id="next">Næste →</button>
-        <span class="label l-amber" id="counter">1 / 6</span>
-        <button class="btn-nav" id="fs">Fuldskærm <span class="kbd">F</span></button>
+<script>
+/* ======================= CONFIG (indhold/tekster) ======================= */
+const CONFIG = {
+  modules: ["quiz","dragdrop","querybuilder","sus"],
+  pointsEnabled: true,
+  printEnabled: true,
+  texts: {
+    goals: [
+      "Anvende HCI- og interaktionsdesign-principper til at planlægge og evaluere en mobil app i PBL-kontekst",
+      "Udforme reproducerbare søgestrategier (AND/OR/NOT, trunkering) i Scopus/ACM/IEEE og dokumentere dem",
+      "Udføre en letvægts-UX-evaluering (heuristikker + SUS) og oversætte fund til designforbedringer"
+    ],
+    agenda: [
+      "00:00–00:05 – Intro, læringsmål og format",
+      "00:05–00:15 – HCI i Medialogi: MMI, interaktionsdesign, mobilapp",
+      "00:15–00:25 – Databaser & værktøjer (Scopus, ACM DL, IEEE Xplore, PRIMO, Zotero/Mendeley)",
+      "00:25–00:40 – Interaktiv quiz: kildekritik og relevans",
+      "00:40–00:45 – Spørgsmål & opsamling (blok 1)",
+      "00:45–01:00 – Pause (15 min)",
+      "01:00–01:10 – Drag & drop: HCI-begreber",
+      "01:10–01:20 – Søgestreng-bygger (fra behov til forespørgsel)",
+      "01:20–01:30 – Snowballing (trinvis miniøvelse)",
+      "01:30–01:40 – SUS mini-survey på demo-flow",
+      "01:40–01:45 – Case & næste skridt (blok 2)"
+    ],
+    quiz: [
+      {
+        q: "Hvad indikerer en ‘controlled vocabulary’ (fx IEEE Thesaurus) i en database?",
+        options: [
+          "At alle artikler er peer-reviewed",
+          "At søgeord normaliseres til standardtermer",
+          "At databasen kun dækker 2020-nuværende",
+          "At søgning altid er booleansk"
+        ],
+        correct: 1,
+        explain: "Kontrollerede termer (emneord) sikrer konsistent indeksering og bedre tilbagefindelighed."
+      },
+      {
+        q: "Hvilken kombination giver DEN bredeste søgning?",
+        options: [
+          "mobile AND onboarding",
+          "mobile OR smartphone",
+          "\"mobile onboarding\"",
+          "mobile NOT game"
+        ],
+        correct: 1,
+        explain: "OR udvider mængden ved at inkludere synonymer/relaterede termer."
+      },
+      {
+        q: "Hvad er formålet med en heuristisk evaluering (Nielsen)?",
+        options: [
+          "At måle task completion time præcist",
+          "At identificere UI-problemer via generelle principper",
+          "At teste skalerbarhed af backend",
+          "At beregne SUS automatisk"
+        ],
+        correct: 1,
+        explain: "Heuristikker er generelle retningslinjer til at finde brugsproblemer uden brugere."
+      },
+      {
+        q: "Hvornår er ‘trunkering’ (fx design*) særligt nyttigt?",
+        options: [
+          "Når man vil ekskludere et emne",
+          "Når man vil matche varianter af samme stamme",
+          "Når man kun vil have review-artikler",
+          "Når man søger på DOI"
+        ],
+        correct: 1,
+        explain: "Trunkering matcher varianter (design, designer, designing)."
+      },
+      {
+        q: "Hvilket signal er STÆRKEST for kildeværdi i HCI?",
+        options: [
+          "Høj social media-synlighed",
+          "Publikation i anerkendt venue (fx CHI, TOCHI)",
+          "PDF-layout er flot",
+          "Mange billeder"
+        ],
+        correct: 1,
+        explain: "Top-venues/forlag indikerer kvalitetskontrol og relevans."
+      },
+      {
+        q: "Hvad betyder ‘ecological validity’ i UX-studier?",
+        options: [
+          "At resultater kan generaliseres til andre metoder",
+          "At test foregår i realistisk kontekst",
+          "At data er normalfordelte",
+          "At SUS ≥ 68"
+        ],
+        correct: 1,
+        explain: "Økologisk validitet = realistisk kontekst/brugssituation."
+      }
+    ],
+    dragdrop: {
+      left: [
+        "Affordance","Signifier","Feedback","Consistency","Fitts’ law","Heuristik: Synlighed af systemstatus",
+        "Cognitive load","Progressive disclosure","Onboarding","A/B-test","Think-aloud","Error prevention"
+      ],
+      right: [
+        "Muligheder som et objekt naturligt inviterer til (hvad kan jeg gøre?)",
+        "Markør/tegn der viser hvordan man interagerer (ikon, label, cursor)",
+        "Respons der viser resultat/tilstand efter handling",
+        "Ensartede mønstre på tværs af skærme/interaktioner",
+        "Tids-afstand tradeoff: tættere/larger targets = hurtigere",
+        "Systemet informerer brugeren rettidigt og tydeligt om hvad der sker",
+        "Mentalt arbejde; bør minimeres ved klare strukturer",
+        "Afslører kompleksitet i små trin når brugeren er klar",
+        "Første-gangsforløb der lærer centrale funktioner",
+        "Eksperiment der sammenligner to varianter",
+        "Brugeren tænker højt under udførelse af opgaver",
+        "Design forebygger fejl før de opstår"
+      ]
+    },
+    queryExamples: [
+      "(mobile OR smartphone) AND onboarding AND (usability OR \"user experience\")",
+      "(haptic* OR gesture*) AND (feedback) AND (prototype OR prototype*)",
+      "\"augmented reality\" AND (education OR learning) NOT game*"
+    ],
+    susItems: [
+      "Jeg vil bruge denne app ofte i mit projektarbejde",
+      "Jeg synes systemet er unødigt komplekst (R)",
+      "Systemet var let at bruge",
+      "Jeg tror jeg får brug for support for at bruge systemet (R)",
+      "Funktionerne var godt integreret",
+      "Der var for meget inkonsistens (R)",
+      "De fleste vil lære dette hurtigt",
+      "Systemet var besværligt at bruge (R)",
+      "Jeg følte mig tryg ved at bruge systemet",
+      "Jeg skulle lære en masse før jeg kunne komme i gang (R)"
+    ],
+    case: {
+      title: "Case: CampusGuide – mikro-onboarding i en AAU app",
+      prompt:
+"En studentergruppe skal designe en mobil ‘CampusGuide’ for nye studerende på TECH/ENG. \
+Primære opgaver: finde lokaler, printere og studierum; sekundært: hurtig adgang til biblioteksressourcer. \
+Gruppen har 4 uger. Vælg passende metoder (research, prototyping, evaluering), og adresser etik (samtykke, positionsdata)."
+    }
+  }
+};
+/* ======================= Slideshow engine ======================= */
+(() => {
+  const S = {};
+  const qs = (s,el=document)=>el.querySelector(s);
+  const qsa = (s,el=document)=>[...el.querySelectorAll(s)];
+  const slidesEl = document.createElement('div');
+  slidesEl.className = 'slides';
+  const deck = document.createElement('div'); deck.className = 'deck';
+  // AppBar
+  deck.innerHTML = `
+    <header class="appbar" role="banner">
+      <div class="brand" aria-label="Aalborg Universitetsbibliotek">
+        <img src="https://learninglib.org/wp-content/uploads/2025/10/AUB-logo-da-1.png" alt="AUB logo" loading="lazy">
+        <div class="title">Medialogi 2. sem · HCI & Informationssøgning</div>
       </div>
+      <div class="controls" role="group" aria-label="Navigation og handlinger">
+        <button class="btn btn-ghost" id="btnHelp" aria-haspopup="dialog" aria-controls="help" title="Hjælp (H eller ?)">Hjælp</button>
+        <button class="btn btn-ghost" id="btnPrint" title="Print/PDF (Ctrl/Cmd+P)">Print</button>
+        <button class="btn btn-primary" id="btnPrev" title="Forrige (←)" aria-label="Forrige slide">←</button>
+        <button class="btn btn-primary" id="btnNext" title="Næste (→)" aria-label="Næste slide">→</button>
+        <span class="pill counter" id="counter" aria-live="polite">0/0</span>
+      </div>
+    </header>
+    <main class="viewport" role="region" aria-label="Slides">
+      <div class="progress" id="progress" aria-hidden="true"></div>
+    </main>
+    <footer class="toolbar" role="contentinfo">
+      <span class="badges">
+        <span class="pill">Piletaster</span>
+        <span class="pill">Klik/Swipe</span>
+        <span class="pill">URL-hash</span>
+        <span class="pill">WCAG AA</span>
+      </span>
+      <span class="spacer"></span>
+      <img src="https://learninglib.org/wp-content/uploads/2025/10/AAU_CENTER_WHITE.png" alt="AAU ikon" loading="lazy" style="height:28px; background:#211a52; border-radius:8px; padding:3px; border:1px solid var(--clr-border)">
     </footer>
-  </div>
+    <div class="help" id="help" aria-hidden="true" role="dialog" aria-label="Hjælp og genveje">
+      <div class="panel">
+        <h2 class="h1">Genveje & Hjælp</h2>
+        <ul>
+          <li><span class="kbd">←</span>/<span class="kbd">→</span> navigerer mellem slides</li>
+          <li>Klik venstre/højre side · Swipe på mobil</li>
+          <li><span class="kbd">H</span> eller <span class="kbd">?</span> åbner/lukker denne hjælp</li>
+          <li><span class="kbd">Ctrl/Cmd</span> + <span class="kbd">P</span> for at gemme som PDF</li>
+          <li>Fuld tastaturbetjening: alle interaktive komponenter kan betjenes uden mus</li>
+        </ul>
+        <div class="actions"><button class="btn btn-primary" id="closeHelp">Luk</button></div>
+      </div>
+    </div>
+  `;
+  qs('main.viewport', deck).appendChild(slidesEl);
+  document.body.prepend(deck);
 
-  <script>
-    // —— Slide navigation ——
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    const prog = document.getElementById('prog');
-    const counter = document.getElementById('counter');
-    let idx = 0;
-    function show(i){
-      idx = Math.max(0, Math.min(slides.length-1, i));
-      slides.forEach((s,n)=> s.classList.toggle('active', n===idx));
-      prog.style.width = ((idx)/(slides.length-1))*100 + '%';
-      counter.textContent = (idx+1)+' / '+slides.length;
-      location.hash = '#/'+(idx+1); // enkel deeplink
-    }
-    document.getElementById('prev').onclick=()=>show(idx-1);
-    document.getElementById('next').onclick=()=>show(idx+1);
-    window.addEventListener('keydown', (e)=>{
-      if(e.key==='ArrowRight') show(idx+1);
-      if(e.key==='ArrowLeft') show(idx-1);
-      if(e.key.toLowerCase()==='f') toggleFs();
+  /* ===== Slides (content) ===== */
+  const addSlide = (title, inner) => {
+    const s = document.createElement('section');
+    s.className = 'slide'; s.setAttribute('data-title', title);
+    s.innerHTML = inner; slidesEl.appendChild(s);
+  };
+
+  // 1) Title & goals
+  addSlide("Titel & læringsmål", `
+    <h1 class="h0">HCI, interaktionsdesign & informationssøgning</h1>
+    <p class="lead">Medialogi 2. semester · Fokus: mobil app, UX-evaluering og PBL</p>
+    <div class="grid cols-2">
+      <div class="card">
+        <h2 class="h2">Læringsmål</h2>
+        <ul>${CONFIG.texts.goals.map(g=>`<li>${g}</li>`).join('')}</ul>
+      </div>
+      <div class="card">
+        <h2 class="h2">Format</h2>
+        <ul>
+          <li>2 × 45 min med 15 min pause</li>
+          <li>Interaktive moduler: Quiz, Drag&Drop, Søgestreng-bygger, SUS</li>
+          <li>Case-arbejde i PBL-grupper</li>
+        </ul>
+        <img class="imgfit" src="https://learninglib.org/wp-content/uploads/2025/10/COLOURBOX68255171-ezgif.com-gif-maker.gif" alt="AI/UX illustration" loading="lazy">
+      </div>
+    </div>
+  `);
+
+  // 2) Agenda
+  addSlide("Agenda", `
+    <h2 class="h1">Agenda (2 × 45 min + 15 min pause)</h2>
+    <ol>${CONFIG.texts.agenda.map(a=>`<li>${a}</li>`).join('')}</ol>
+  `);
+
+  // 3) HCI & PBL (kort kontekst)
+  addSlide("HCI & PBL (kontekst)", `
+    <h2 class="h1">HCI + PBL i Medialogi</h2>
+    <div class="grid cols-2">
+      <div class="card">
+        <h3 class="h2">HCI-tråden</h3>
+        <ul>
+          <li>MMI, interaktionsdesign, prototyper (low→high fidelity)</li>
+          <li>Heuristisk evaluering, think-aloud, A/B-test</li>
+          <li>Mobil kontekst: touch, målestørrelser, Fitts’ lov</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="h2">PBL-tråden</h3>
+        <ul>
+          <li>Problemformulering → metoder → iterationer</li>
+          <li>Dokumentation: søgelog, beslutningslog, etik</li>
+          <li>Designbeslutninger begrundes i data</li>
+        </ul>
+      </div>
+    </div>
+  `);
+
+  // 4) Databaser & værktøjer
+  addSlide("Databaser & værktøjer", `
+    <h2 class="h1">Databaser & værktøjer</h2>
+    <div class="grid cols-3">
+      <div class="card">
+        <h3 class="h2">Fagspecifikt</h3>
+        <ul>
+          <li>Scopus (brede søgninger, cited-by)</li>
+          <li>ACM Digital Library (HCI/CHI/TOCHI)</li>
+          <li>IEEE Xplore (engineering, mobile, sensing)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="h2">AAU/Primo</h3>
+        <ul>
+          <li>PRIMO til bog/kapitel, hurtig fuldtekst</li>
+          <li>Link Resolver & fuldtekstadgang</li>
+          <li>Fjernadgang via AAU</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="h2">Referenceværktøjer</h3>
+        <ul>
+          <li>Zotero / Mendeley (grupper & cite)</li>
+          <li>Plugins til Word/Google Docs</li>
+          <li>Note-tags & PDF-annotering</li>
+        </ul>
+      </div>
+    </div>
+    <img class="imgfit" src="https://learninglib.org/wp-content/uploads/2025/10/search-1508_256.gif" alt="Søgeanimering" loading="lazy">
+  `);
+
+  // 5) Interaktiv 1: Quiz
+  addSlide("Interaktiv: Quiz", `
+    <h2 class="h1">Quiz: Kildekritik & relevans</h2>
+    <quiz-module class="wc card" data-points="${CONFIG.pointsEnabled}"></quiz-module>
+  `);
+
+  // 6) Interaktiv 2: Drag & drop
+  addSlide("Interaktiv: Drag & Drop", `
+    <h2 class="h1">Match begreb ↔ definition</h2>
+    <dragdrop-module class="wc card" data-points="${CONFIG.pointsEnabled}"></dragdrop-module>
+    <p class="note">Tip: Brug <span class="kbd">Tab</span>/<span class="kbd">Enter</span> for tastaturmatch.</p>
+  `);
+
+  // 7) Søgestreng-bygger
+  addSlide("Søgestreng-bygger", `
+    <h2 class="h1">Byg en søgestreng</h2>
+    <querybuilder-module class="wc card"></querybuilder-module>
+    <div class="card"><strong>Eksempler:</strong>
+      <ul>${CONFIG.texts.queryExamples.map(q=>`<li><code>${q.replaceAll('<','&lt;').replaceAll('>','&gt;')}</code></li>`).join('')}</ul>
+    </div>
+  `);
+
+  // 8) Snowballing (trinliste, enkel)
+  addSlide("Snowballing", `
+    <h2 class="h1">Snowballing (trin for trin)</h2>
+    <ol class="card">
+      <li>Find 1–2 kerneartikler via præcis søgning</li>
+      <li>Bagud: gennemgå referencelisten for nøglekilder</li>
+      <li>Fremad: brug “Cited by” (Scopus/Google Scholar)</li>
+      <li>Udvid med synonymer og relaterede termer</li>
+      <li>Notér iterationer i søgelog (dato, ændringer, resultater)</li>
+    </ol>
+  `);
+
+  // 9) SUS mini-survey
+  addSlide("SUS mini-survey", `
+    <h2 class="h1">SUS: System Usability Scale (mini)</h2>
+    <sus-module class="wc card"></sus-module>
+  `);
+
+  // 10) Case
+  addSlide("Case: metodevalg & etik", `
+    <h2 class="h1">${CONFIG.texts.case.title}</h2>
+    <p>${CONFIG.texts.case.prompt}</p>
+    <div class="grid cols-2">
+      <div class="card">
+        <h3 class="h2">Vælg metoder</h3>
+        <ul>
+          <li>Research: 3 interviews + observationsrunde på campus</li>
+          <li>Prototyper: Papir → klikbar (Figma) → mobil web demo</li>
+          <li>Evaluering: Heuristik + 5-person think-aloud + SUS</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="h2">Etik & data</h3>
+        <ul>
+          <li>Informeret samtykke, anonymisering</li>
+          <li>Positionsdata kun i anonym, aggregeret form</li>
+          <li>Opbevaring: krypterede mapper, sletteplan</li>
+        </ul>
+      </div>
+    </div>
+  `);
+
+  // 11) Opsamling
+  addSlide("Opsamling & næste skridt", `
+    <h2 class="h1">Opsamling & næste skridt</h2>
+    <ul>
+      <li>Brug søgelog + snowballing til at styrke jeres PBL-rapport</li>
+      <li>Test småt og ofte – og mål med SUS</li>
+      <li>Organisér referencer i Zotero/Mendeley (grupper)</li>
+    </ul>
+    <div class="badges">
+      <a class="btn" href="#0" onclick="window.print()">Gem som PDF</a>
+      <span class="pill">Tak for i dag!</span>
+    </div>
+  `);
+
+  // Count & hash
+  const slides = () => qsa('section.slide', slidesEl);
+  const count = () => slides().length;
+  slides().forEach(s=>s.setAttribute('data-count', count()));
+
+  const state = {i: 0};
+  const clamp = (n,min,max)=>Math.max(min, Math.min(max, n));
+
+  const go = (i, setHash=true) => {
+    state.i = clamp(i, 0, count()-1);
+    slidesEl.style.transform = `translateX(-${state.i*100}%)`;
+    document.querySelector('#counter').textContent = `${state.i+1}/${count()}`;
+    const pct = (state.i)/(Math.max(1,count()-1))*100;
+    document.querySelector('#progress').style.width = pct+'%';
+    if(setHash) location.hash = '#'+(state.i+1);
+    slides()[state.i].focus?.();
+  };
+
+  window.addEventListener('hashchange', ()=>{
+    const n = parseInt(location.hash.replace('#',''),10);
+    if(!isNaN(n)) go(n-1,false);
+  });
+
+  // Click sides to navigate
+  document.querySelector('main.viewport').addEventListener('click', (e)=>{
+    const rect = e.currentTarget.getBoundingClientRect();
+    const left = (e.clientX - rect.left) < rect.width/2;
+    if(left) go(state.i-1); else go(state.i+1);
+  });
+
+  // Swipe
+  let sx=null;
+  document.querySelector('main.viewport').addEventListener('touchstart', e=>sx=e.touches[0].clientX, {passive:true});
+  document.querySelector('main.viewport').addEventListener('touchend', e=>{
+    if(sx==null) return; const dx = e.changedTouches[0].clientX - sx;
+    if(Math.abs(dx)>40){ if(dx>0) go(state.i-1); else go(state.i+1); }
+    sx=null;
+  });
+
+  // Keys
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowRight') { go(state.i+1); }
+    else if(e.key==='ArrowLeft') { go(state.i-1); }
+    else if(e.key==='?' || e.key.toLowerCase()==='h'){ toggleHelp(); }
+  });
+
+  // Buttons
+  document.querySelector('#btnNext').onclick = ()=>go(state.i+1);
+  document.querySelector('#btnPrev').onclick = ()=>go(state.i-1);
+  document.querySelector('#btnPrint').onclick = ()=>window.print();
+  document.querySelector('#btnHelp').onclick = ()=>toggleHelp();
+  document.querySelector('#closeHelp').onclick = ()=>toggleHelp(false);
+  function toggleHelp(force){
+    const el = document.querySelector('#help');
+    const open = (force!==undefined)? force : el.getAttribute('aria-hidden')==='true';
+    el.setAttribute('aria-hidden', open? 'false':'true');
+  }
+
+  // Start
+  const startIndex = Math.max(1, parseInt(location.hash.replace('#',''),10)) - 1;
+  go(isNaN(startIndex)?0:startIndex, false);
+})();
+
+/* ======================= Web Components ======================= */
+
+/* ---- Quiz Module ---- */
+customElements.define('quiz-module', class extends HTMLElement{
+  connectedCallback(){
+    this.tabIndex=0;
+    this.render();
+  }
+  render(){
+    const data = CONFIG.texts.quiz;
+    this.score = 0; this.answered = new Set();
+    this.innerHTML = `
+      <div class="quiz" role="group" aria-label="Quiz">
+        ${data.map((item, idx)=>`
+          <div class="q" data-idx="${idx}">
+            <div class="h2">Spørgsmål ${idx+1}</div>
+            <p>${item.q}</p>
+            ${item.options.map((opt,i)=>`
+              <button class="opt" role="radio" aria-checked="false" tabindex="0" data-i="${i}">
+                ${opt}
+              </button>`).join('')}
+            <div class="feedback" aria-live="polite"></div>
+          </div>
+        `).join('')}
+        <div class="actions">
+          <span>Point: <span class="score" aria-live="polite">0</span></span>
+          <button class="btn" data-act="reset">Nulstil</button>
+        </div>
+      </div>
+    `;
+    this.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.opt'); if(!btn) return;
+      const qEl = btn.closest('.q'); const qIdx = +qEl.dataset.idx;
+      if(this.answered.has(qIdx)) return;
+      [...qEl.querySelectorAll('.opt')].forEach(o=>o.setAttribute('aria-checked','false'));
+      btn.setAttribute('aria-checked','true');
+      const item = data[qIdx];
+      if(+btn.dataset.i===item.correct){
+        btn.classList.add('correct');
+        qEl.querySelector('.feedback').textContent = "Korrekt: "+item.explain;
+        if(CONFIG.pointsEnabled){ this.score+=1; this.answered.add(qIdx); this.updateScore(); }
+      } else {
+        btn.classList.add('wrong');
+        qEl.querySelector('.feedback').textContent = "Ikke helt. Tip: "+item.explain;
+        this.answered.add(qIdx);
+      }
     });
-    function toggleFs(){ const el=document.documentElement; if(!document.fullscreenElement){el.requestFullscreen?.();} else {document.exitFullscreen?.();} }
-    document.getElementById('fs').onclick=toggleFs;
-    // start på evt. hash
-    if(location.hash.startsWith('#/')){ const n=parseInt(location.hash.slice(2),10); if(!Number.isNaN(n)) idx=Math.min(Math.max(n-1,0), slides.length-1); }
-    show(idx);
+    this.addEventListener('click',(e)=>{
+      if(e.target.matches('[data-act="reset"]')) this.render();
+    });
+  }
+  updateScore(){ this.querySelector('.score').textContent = this.score; }
+});
 
-    // —— Quiz data (baseret på slide-facts) ——
-    const QA = [
-      {q:'Hvad er anledningen til dagens fejringer?', opts:['Nye åbningstider','Bibliotekets 50-års fødselsdag','Ny hjemmeside'], a:1},
-      {q:'Hvad kan du prøve for at få hjælp til litteratursøgning?', opts:['Primo Research Assistant','Photoshop','Excel'], a:0},
-      {q:'Hvor lang tid varer en vejledning ifølge slides?', opts:['30 minutter','1 time','2 timer'], a:1},
-      {q:'Hvor kan du stille spørgsmål til os?', opts:['Kun på sociale medier','Kun fysisk i skranken','På biblioteket og online'], a:2},
-      {q:'Hvad viser den korte rundvisning?', opts:['Kantinen og printerrummet','Studiepladser og grupperum','Kun bogsamlingen'], a:1}
-    ];
-
-    const quizEl = document.getElementById('quiz');
-    const scoreEl = document.getElementById('score');
-    function renderQuiz(){
-      quizEl.innerHTML='';
-      QA.forEach((item,i)=>{
-        const wrap = document.createElement('div');
-        wrap.className='q';
-        wrap.innerHTML = `<h4>${i+1}. ${item.q}</h4>`;
-        const opts = document.createElement('div');
-        opts.className='opts';
-        item.opts.forEach((label,j)=>{
-          const id = `q${i}o${j}`;
-          const opt = document.createElement('label');
-          opt.className='opt';
-          opt.innerHTML = `<input type="radio" name="q${i}" value="${j}" aria-label="${label}"> <span>${label}</span>`;
-          opts.appendChild(opt);
-        });
-        wrap.appendChild(opts);
-        quizEl.appendChild(wrap);
-      });
-      scoreEl.textContent = 'Score: 0/'+QA.length;
+/* ---- Drag & Drop Module ---- */
+customElements.define('dragdrop-module', class extends HTMLElement{
+  connectedCallback(){ this.tabIndex=0; this.init(); }
+  init(){
+    const L = CONFIG.texts.dragdrop.left.slice();
+    const R = CONFIG.texts.dragdrop.right.slice();
+    // Shuffle for play
+    const shuffle = arr => arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
+    const left = shuffle(L), right = shuffle(R);
+    this.matches = 0; this.total = L.length;
+    this.innerHTML = `
+      <div class="dd-container">
+        <div class="dd-keyboard">
+          <label for="selLeft">Tastatur-match:</label>
+          <select id="selLeft" aria-label="Begreber">${left.map((t,i)=>`<option value="${i}">${t}</option>`).join('')}</select>
+          <span>↔</span>
+          <select id="selRight" aria-label="Definitioner">${right.map((t,i)=>`<option value="${i}">${t}</option>`).join('')}</select>
+          <button class="btn" id="btnPair">Match</button>
+          <span>Rigtige: <span class="score">${this.matches}</span> / ${this.total}</span>
+        </div>
+        <div class="dd-lists" role="application" aria-label="Drag and drop">
+          <div class="dd-col" aria-label="Begreber" id="leftCol">
+            ${left.map((t,i)=>`<span class="token" tabindex="0" draggable="true" data-idx="${i}" aria-grabbed="false">${t}</span>`).join('')}
+          </div>
+          <div class="dd-col" aria-label="Definitioner" id="rightCol">
+            ${right.map((t,i)=>`
+              <div class="drop" tabindex="0" data-idx="${i}" aria-dropeffect="move">${t}</div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="actions"><button class="btn" id="resetDD">Nulstil</button></div>
+      </div>
+    `;
+    const idxOf = (arr, val)=>arr.indexOf(val);
+    const leftMap = {}; left.forEach((t,i)=> leftMap[i] = idxOf(R, CONFIG.texts.dragdrop.right[CONFIG.texts.dragdrop.left.indexOf(t)]));
+    // DnD handlers
+    let dragEl = null;
+    this.addEventListener('dragstart', e=>{
+      const tok = e.target.closest('.token'); if(!tok) return;
+      dragEl = tok; tok.setAttribute('aria-grabbed','true');
+      e.dataTransfer.setData('text/plain', tok.dataset.idx);
+    });
+    this.addEventListener('dragend', e=>{
+      if(dragEl){ dragEl.setAttribute('aria-grabbed','false'); dragEl=null; }
+    });
+    this.addEventListener('dragover', e=>{
+      if(e.target.classList.contains('drop')) e.preventDefault();
+    });
+    this.addEventListener('drop', e=>{
+      const drop = e.target.closest('.drop'); if(!drop) return;
+      e.preventDefault();
+      const li = + (dragEl? dragEl.dataset.idx : e.dataTransfer.getData('text/plain'));
+      const ri = + drop.dataset.idx;
+      this.checkPair(li, ri, leftMap, drop, dragEl);
+    });
+    // Keyboard match
+    this.querySelector('#btnPair').addEventListener('click', ()=>{
+      const li = +this.querySelector('#selLeft').value;
+      const ri = +this.querySelector('#selRight').value;
+      const drop = this.querySelector(`.drop[data-idx="${ri}"]`);
+      const tok = this.querySelector(`.token[data-idx="${li}"]`);
+      this.checkPair(li, ri, leftMap, drop, tok);
+    });
+    this.querySelector('#resetDD').onclick = ()=>this.init();
+  }
+  checkPair(li, ri, map, drop, tok){
+    if(!drop || !tok) return;
+    if(map[li]===ri){
+      drop.classList.remove('wrong'); drop.classList.add('matched');
+      drop.innerHTML = `<strong>${tok.textContent}</strong> ✓`;
+      tok.remove();
+      this.matches++; this.querySelector('.score').textContent = this.matches;
+      if(CONFIG.pointsEnabled) document.querySelector('quiz-module')?.updateScore?.(); // noop: shared idea
+    } else {
+      drop.classList.add('wrong');
     }
+  }
+});
 
-    function checkAnswers(){
-      let score = 0;
-      const groups = quizEl.querySelectorAll('.q');
-      groups.forEach((g,i)=>{
-        const sel = g.querySelector('input[type="radio"]:checked');
-        const opts = g.querySelectorAll('.opt');
-        opts.forEach(o=> o.classList.remove('correct','wrong'));
-        if(sel){
-          const v = parseInt(sel.value,10);
-          if(v===QA[i].a){ score++; sel.closest('.opt').classList.add('correct'); }
-          else { sel.closest('.opt').classList.add('wrong');
-            // marker korrekt svar subtilt
-            opts[QA[i].a].classList.add('correct');
-          }
-        }
-      });
-      scoreEl.textContent = 'Score: '+score+'/'+QA.length;
-    }
+/* ---- Query Builder ---- */
+customElements.define('querybuilder-module', class extends HTMLElement{
+  connectedCallback(){ this.tabIndex=0; this.rows=[{field:'mobile', op:'AND'}]; this.render(); }
+  render(){
+    this.innerHTML = `
+      <div class="qb" role="group" aria-label="Søgestreng bygger">
+        <div class="qb-rows"></div>
+        <div class="actions">
+          <button class="btn" data-add>+ Term</button>
+          <button class="btn btn-primary" data-build>Generér streng</button>
+        </div>
+        <div class="out card" aria-live="polite" aria-label="Genereret forespørgsel"></div>
+      </div>
+    `;
+    this.rowsEl = this.querySelector('.qb-rows');
+    this.outEl = this.querySelector('.out');
+    this.querySelector('[data-add]').onclick = ()=>{ this.rows.push({field:'', op:'AND'}); this.drawRows(); };
+    this.querySelector('[data-build]').onclick = ()=> this.build();
+    this.drawRows();
+  }
+  drawRows(){
+    const ops = ['AND','OR','NOT'];
+    this.rowsEl.innerHTML = this.rows.map((r,i)=>`
+      <div class="qb-row" data-i="${i}">
+        <select aria-label="Operator">
+          ${ops.map(o=>`<option ${r.op===o?'selected':''}>${o}</option>`).join('')}
+        </select>
+        <input type="text" placeholder="term, frase i &quot;...&quot;, trunkering *" value="${r.field.replaceAll('"','&quot;')}"/>
+        <button class="btn" data-del title="Fjern">Slet</button>
+      </div>
+    `).join('');
+    this.rowsEl.querySelectorAll('.qb-row').forEach(row=>{
+      const i = +row.dataset.i;
+      row.querySelector('select').onchange = e=> this.rows[i].op = e.target.value;
+      row.querySelector('input').oninput = e=> this.rows[i].field = e.target.value;
+      row.querySelector('[data-del]').onclick = ()=>{ this.rows.splice(i,1); this.drawRows(); };
+    });
+  }
+  build(){
+    const chunks = this.rows.map((r,idx)=>{
+      const term = r.field.trim();
+      if(!term) return null;
+      const piece = term.includes(' ') && !/^\".*\"$/.test(term) ? `"${term}"` : term;
+      return (idx>0? `${r.op} `:'') + piece;
+    }).filter(Boolean);
+    const str = chunks.join(' ');
+    this.outEl.textContent = str || "(tom)";
+  }
+});
 
-    function resetQuiz(){ renderQuiz(); }
-
-    document.getElementById('checkBtn').onclick = checkAnswers;
-    document.getElementById('resetBtn').onclick = resetQuiz;
-
-    renderQuiz();
-  </script>
+/* ---- SUS Module ---- */
+customElements.define('sus-module', class extends HTMLElement{
+  connectedCallback(){ this.tabIndex=0; this.render(); }
+  render(){
+    const items = CONFIG.texts.susItems;
+    this.innerHTML = `
+      <div class="sus">
+        <form>
+          <table aria-label="SUS skema">
+            <thead>
+              <tr><th style="text-align:left">Udsagn (1=Helt uenig · 5=Helt enig)</th>
+                ${[1,2,3,4,5].map(n=>`<th>${n}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${items.map((t,i)=>`
+                <tr>
+                  <td>${t.replace('(R)','<em>(omvendt)</em>')}</td>
+                  ${[1,2,3,4,5].map(n=>`
+                    <td style="text-align:center">
+                      <input name="q${i}" type="radio" value="${n}" aria-label="${t}" ${n===3?'checked':''}>
+                    </td>`).join('')}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn btn-primary" type="submit">Beregn score</button>
+            <span class="scorebox">SUS: <span class="score">–</span>/100</span>
+          </div>
+        </form>
+      </div>
+    `;
+    this.querySelector('form').addEventListener('submit', e=>{
+      e.preventDefault();
+      const vals = CONFIG.texts.susItems.map((_,i)=> +this.querySelector(`input[name="q${i}"]:checked`).value );
+      // SUS scoring: ulige: score = x-1; lige/omvendt: score = 5-x; sum*2.5
+      const score = vals.reduce((acc,v,i)=>{
+        const reversed = CONFIG.texts.susItems[i].includes('(R)');
+        const s = reversed ? (6 - v) : (v - 1);
+        return acc + s;
+      },0) * 2.5;
+      this.querySelector('.score').textContent = Math.round(score);
+    });
+  }
+});
+</script>
 </body>
 </html>

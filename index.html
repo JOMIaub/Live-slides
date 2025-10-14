@@ -1,207 +1,297 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="da">
 <head>
   <meta charset="utf-8" />
-  <title>Jona – Interaktive Slides</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Reveal.js CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/white.css" id="theme">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-
+  <title>AUB 50-års jubilæum – Interaktive slides</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      /* farver: blå-grå palette */
-      --bg: #f4f7f8;
-      --ink: #1f2937;
-      --muted: #6b7280;
-      --brand: #0a5ea8;        /* primær blå */
-      --brand-2: #6bb4ff;      /* sekundær lys blå */
-      --card: #ffffff;
-    }
-    body { background: var(--bg); }
+      /* Tilladte farver */
+      --p900:#211a52; /* dyb indigo */
+      --p600:#594fbf; /* violet */
+      --p500:#54616e; /* skifergrå */
+      --amber:#df8e2e; --terra:#a16547; --rust:#bb5b17; --olive:#97701f;
+      --blue:#007fa3; --teal:#0e8563; --rose:#e78293; --sand:#cc8b66;
+      --black:#000; --white:#fff;
 
-    /* reveal overordnet typografi */
-    .reveal { color: var(--ink); }
-    .reveal h1, .reveal h2, .reveal h3 { 
-      font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      letter-spacing: -0.5px;
-    }
-    .reveal h2 { color: #073255; }
-    .reveal p, .reveal li {
-      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      line-height: 1.6;
-      font-size: 1.05em;
-    }
-    .reveal small { color: var(--muted); }
-
-    /* kort-komponent til “cards” på slides */
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 20px 24px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.07);
+      --bg: var(--p900);
+      --fg: var(--white);
+      --muted:#ffffffcc; /* hvid m. alfa */
+      --card: var(--p500); --card-fg: var(--white);
     }
 
-    /* split layout */
-    .split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      align-items: center;
-    }
-    @media (max-width: 900px){
-      .split { grid-template-columns: 1fr; }
-    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family:'Barlow',system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--fg);}
 
-    /* billeder */
-    .reveal img {
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.08);
-    }
+    /* Deck & slides */
+    .deck{position:relative; min-height:100dvh; display:grid; grid-template-rows:1fr auto}
+    .slides{position:relative}
+    .slide{position:absolute; inset:0; opacity:0; transform:translateX(24px) scale(.98); transition:opacity .35s ease, transform .35s ease; padding:clamp(20px,6vw,64px); display:flex; flex-direction:column; justify-content:center; gap:20px; background:linear-gradient(0deg,#ffffff0a,#ffffff00); pointer-events:none; z-index:0}
+    .slide.active{opacity:1; transform:none; pointer-events:auto; z-index:2}
 
-    /* callout badge */
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      color: #fff;
-      font: 600 12px/1 "Inter", sans-serif;
-      letter-spacing: .3px;
-    }
+    h1{font-size:clamp(36px,6vw,72px); font-weight:800; margin:0}
+    h2{font-size:clamp(26px,4vw,42px); font-weight:800; margin:0}
+    h3{font-size:clamp(18px,2.6vw,26px); font-weight:700; margin:.2em 0}
+    p{font-size:clamp(16px,1.6vw,20px); color:var(--muted); margin:.2em 0}
+    ul{margin:0; padding-left:1.1em}
 
-    /* fast logo/branding i hjørnet – udskift src nedenfor */
-    .brandmark {
-      position: fixed; 
-      top: 14px; left: 14px; 
-      z-index: 9999; 
-      display:flex; align-items:center; gap:10px;
-    }
-    .brandmark img { height: 28px; border-radius: 6px; box-shadow:none; }
-    .brandmark span { font: 700 13px/1 "Inter", sans-serif; color:#123; opacity:.7; }
+    .row{display:flex; gap:18px; flex-wrap:wrap}
+    .col{flex:1 1 280px}
 
-    /* footer / slide-nummer badge */
-    .reveal .slide-number {
-      background: rgba(0,0,0,.06);
-      border-radius: 10px;
-      padding: 6px 10px;
-    }
+    .brandbar{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+    .brandbar img{height:44px}
 
-    /* mikro-animation til hover */
-    @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-6px)} }
-    .floaty:hover { animation: float 2s ease-in-out infinite; }
+    .label{display:inline-block; padding:.35em .7em; border-radius:999px; font-weight:700; letter-spacing:.2px}
+    .l-blue{background:var(--blue); color:var(--white)}
+    .l-amber{background:var(--amber); color:var(--black)}
+    .l-teal{background:var(--teal); color:var(--white)}
+
+    .card{background:var(--card); color:var(--card-fg); border-radius:18px; padding:clamp(14px,2.8vw,28px); border:1px solid #ffffff22; box-shadow:0 10px 30px #0006}
+
+    .btn{display:inline-flex; align-items:center; gap:.6em; background:var(--blue); color:var(--white); border:none; border-radius:14px; padding:.8em 1.1em; font-weight:700; cursor:pointer}
+    .btn.alt{background:var(--olive)}
+
+    .kbd{font-weight:700; padding:.1em .45em; border-radius:6px; border:1px solid #ffffff55; background:#ffffff10}
+
+    /* Footer nav */
+    footer.nav{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; background:#0008; border-top:1px solid #ffffff22}
+    .btn-nav{display:inline-flex; align-items:center; gap:.5em; padding:.55em .9em; border-radius:12px; border:1px solid #ffffff33; background:#ffffff10; color:var(--white); font-weight:700; cursor:pointer}
+    .btn-nav:hover{background:#ffffff18}
+    .progress{height:8px; flex:1; background:#ffffff22; border-radius:999px; overflow:hidden}
+    .progress>span{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--amber), var(--rose))}
+
+    /* Quiz */
+    .quiz{display:grid; gap:16px}
+    .q{background:var(--p500); border:1px solid #ffffff33; border-radius:14px; padding:14px}
+    .q h4{margin:.1em 0; font-size:1.05rem}
+    .opts{display:grid; gap:10px; margin-top:10px}
+    .opt{display:flex; gap:10px; align-items:flex-start; background:#ffffff10; border:1px solid #ffffff22; border-radius:12px; padding:10px; cursor:pointer}
+    .opt input{margin-top:.25em}
+    .correct{border-color:var(--teal)}
+    .wrong{border-color:var(--rust)}
+    .pill{background:#ffffff10; border:1px solid #ffffff33; border-radius:999px; padding:.45em .8em; font-weight:700}
+
+    /* Helpers */
+    .muted{color:var(--muted)}
+    .accent{color:var(--amber)}
+
+    @media (max-width:960px){
+      .brandbar img{height:36px}
+    }
   </style>
 </head>
 <body>
+  <div class="deck" id="deck">
+    <main class="slides" id="slides">
 
-<!-- Logo/branding – skift kilde hvis du vil -->
-<div class="brandmark">
-  <img src="https://learninglib.org/wp-content/uploads/2022/11/AUB-logo-da-1.png" alt="AUB">
-  <span>Interaktive Slides</span>
-</div>
-
-<div class="reveal">
-  <div class="slides">
-
-    <!-- 1: Titel -->
-    <section data-background-color="#eaf4ff">
-      <span class="badge">LIVE • Reveal.js</span>
-      <h2 style="margin-top:12px">AI & Læring – Interaktive demo-slides</h2>
-      <p>Brug <kbd>←</kbd> og <kbd>→</kbd> til at navigere • <kbd>F</kbd> for fuldskærm</p>
-      <p><small>Skabelon: nordic minimal – farver, typografi og layout kan tilpasses.</small></p>
-    </section>
-
-    <!-- 2: Fragmenter (trinvis visning) -->
-    <section>
-      <h2>Hvorfor web-baserede slides?</h2>
-      <ul>
-        <li class="fragment">Kan hostes gratis på <strong>GitHub Pages</strong></li>
-        <li class="fragment">Indlejrer <strong>interaktive</strong> elementer (afstemning, spil, video)</li>
-        <li class="fragment">Nem deling via <strong>URL</strong> – også på mobil</li>
-        <li class="fragment">Fuld kontrol over <strong>design og data</strong></li>
-      </ul>
-    </section>
-
-    <!-- 3: Split layout (tekst + billede) -->
-    <section>
-      <h2>Designprincipper</h2>
-      <div class="split">
-        <div class="card">
-          <ol style="margin:0">
-            <li><strong>Én idé per slide.</strong></li>
-            <li><strong>Kontrast & typografi</strong> – læsbarhed først.</li>
-            <li><strong>Rytme</strong> – skift mellem oplæg og aktivitet.</li>
-            <li><strong>Interaktion</strong> – spørg, stem, byg sammen.</li>
-          </ol>
+      <!-- Slide 1: Titel / Velkomst -->
+      <section class="slide active" data-index="0">
+        <div class="brandbar">
+          <img alt="AUB logo" src="https://learninglib.org/wp-content/uploads/2025/10/AUB-logo-da-1.png"/>
+          <img alt="AAU Center" src="https://learninglib.org/wp-content/uploads/2025/10/AAU_CENTER_WHITE.png"/>
+          <span class="label l-blue">Team Informationskompetence</span>
         </div>
-        <div>
-          <img class="floaty" src="https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1600&auto=format&fit=crop" alt="abstract" />
+        <h1>Vi fejrer bibliotekets <span class="accent">50 år</span>!</h1>
+        <p>Kom og besøg os i vores stande i dag, hvor vi fortæller om, hvad vi kan tilbyde dig.</p>
+        <div class="row">
+          <div class="col card">
+            <h3>Sådan bruger du slides</h3>
+            <ul>
+              <li>Navigér med <span class="kbd">←</span>/<span class="kbd">→</span> eller knapperne nederst.</li>
+              <li>Tryk <span class="kbd">F</span> for fuldskærm.</li>
+              <li>Denne version er klar til GitHub Pages – gem som <code>index.html</code>.</li>
+            </ul>
+          </div>
+          <div class="col card" style="background:linear-gradient(135deg,var(--rose),var(--amber)); color:var(--black)">
+            <h3>Kort overblik</h3>
+            <ul>
+              <li>Rundvisning – studiepladser og grupperum</li>
+              <li>Prøv <strong>Primo Research Assistant</strong></li>
+              <li>Book 1-times vejledning</li>
+            </ul>
+          </div>
         </div>
+      </section>
+
+      <!-- Slide 2: Rundvisning -->
+      <section class="slide" data-index="1">
+        <span class="label l-amber">Guided tour</span>
+        <h2>Kort rundvisning</h2>
+        <div class="row">
+          <div class="col card">
+            <h3>Vi viser dig</h3>
+            <ul>
+              <li>Gode studiepladser</li>
+              <li>Grupperum</li>
+            </ul>
+          </div>
+          <div class="col card">
+            <h3>Spørg undervejs</h3>
+            <p>Du kan altid spørge os – både her på biblioteket og online.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Primo Research Assistant -->
+      <section class="slide" data-index="2">
+        <span class="label l-teal">AI i praksis</span>
+        <h2>Prøv Primo Research Assistant</h2>
+        <p>Få hjælp af AI til at finde akademiske kilder og litteratur.</p>
+        <div class="row">
+          <div class="col card">
+            <h3>Fordele</h3>
+            <ul>
+              <li>Idéer til søgeord og emneafgrænsning</li>
+              <li>Hurtig vej til relevante databaser</li>
+            </ul>
+          </div>
+          <div class="col card">
+            <h3>Tip</h3>
+            <p>Brug altid kildekritik: afsender, formål, dokumentation og dato.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Book vejledning -->
+      <section class="slide" data-index="3">
+        <span class="label l-blue">Guidance</span>
+        <h2>Sådan booker du en vejledning</h2>
+        <div class="row">
+          <div class="col card">
+            <h3>Tilpasset dit projekt</h3>
+            <ul>
+              <li><strong>1-times vejledning</strong> – alene eller som gruppe</li>
+              <li>Fokus på søgestrategi, databaser og referencehåndtering</li>
+            </ul>
+          </div>
+          <div class="col card">
+            <h3>Hvor?</h3>
+            <p>Her på biblioteket eller online – alt efter hvad der passer dig.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Quiz (multiple choice) -->
+      <section class="slide" data-index="4">
+        <span class="label l-amber">Quiz</span>
+        <h2>50-års fødselsdags-quiz</h2>
+        <p class="muted">Vælg ét svar per spørgsmål og tryk “Tjek svar”.</p>
+        <div class="quiz" id="quiz"></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px">
+          <button class="btn" id="checkBtn">Tjek svar</button>
+          <button class="btn alt" id="resetBtn">Nulstil</button>
+          <span class="pill" id="score">Score: 0/5</span>
+        </div>
+      </section>
+
+      <!-- Slide 6: Tak -->
+      <section class="slide" data-index="5">
+        <h2>Tak for i dag!</h2>
+        <p>Du kan altid spørge os – både her på biblioteket og online.</p>
+        <div class="brandbar">
+          <img alt="AUB logo" src="https://learninglib.org/wp-content/uploads/2025/10/AUB-logo-da-1.png"/>
+          <img alt="AAU Center" src="https://learninglib.org/wp-content/uploads/2025/10/AAU_CENTER_WHITE.png"/>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="nav" role="navigation" aria-label="Slide navigation">
+      <button class="btn-nav" id="prev">← Forrige</button>
+      <div class="progress"><span id="prog"></span></div>
+      <div style="display:flex; align-items:center; gap:8px">
+        <button class="btn-nav" id="next">Næste →</button>
+        <span class="label l-amber" id="counter">1 / 6</span>
+        <button class="btn-nav" id="fs">Fuldskærm <span class="kbd">F</span></button>
       </div>
-    </section>
-
-    <!-- 4: Embed – erstat src med din tjeneste -->
-    <section data-background-color="#f7fbff">
-      <h2>Indlejret live-element</h2>
-      <p><small>Erstat <code>src</code> med Mentimeter, Slido, Microsoft Forms, YouTube – eller dit eget HTML-spil.</small></p>
-      <iframe
-        src="https://forms.office.com/"
-        title="Embedded live widget"
-        style="width:100%; height:62vh; border:none; border-radius:14px; background:#fff;">
-      </iframe>
-    </section>
-
-    <!-- 5: Markdown slide (hurtig forfatteroplevelse) -->
-    <section data-markdown>
-<textarea data-template>
-## Slide skrevet i **Markdown**
-- Hurtigt at skrive
-- Let at redigere undervejs
-- Understøtter **bold**, _italic_, lister, links osv.
-
-> Tip: Brug Markdown til indhold – behold HTML til layout og design.
-</textarea>
-    </section>
-
-    <!-- 6: Baggrundsbillede + farveoverlay -->
-    <section 
-      data-background-image="https://images.unsplash.com/photo-1526378722484-bd91ca387e72?q=80&w=1600&auto=format&fit=crop"
-      data-background-size="cover"
-      data-background-opacity="0.12"
-      data-background-color="#0a5ea8">
-      <h2 style="color:#fff">Baggrundsbillede som stemningsbærer</h2>
-      <p style="color:#e9f2ff">Brug sparsomme billeder og høj kontrast på tekst.</p>
-    </section>
-
-    <!-- 7: Afslutning -->
-    <section>
-      <h2>Tak! 🚀</h2>
-      <p>Slides hostes via <strong>GitHub Pages</strong>. Tilpas farver, skrifter og layout for din egen identitet.</p>
-      <p><small>Kilde: Reveal.js • Tema: custom “nordic minimal”.</small></p>
-    </section>
-
+    </footer>
   </div>
-</div>
 
-<!-- Reveal.js JS + plugins -->
-<script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
-<script src="https://unpkg.com/reveal.js/plugin/markdown/markdown.js"></script>
-<script src="https://unpkg.com/reveal.js/plugin/notes/notes.js"></script>
+  <script>
+    // —— Slide navigation ——
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const prog = document.getElementById('prog');
+    const counter = document.getElementById('counter');
+    let idx = 0;
+    function show(i){
+      idx = Math.max(0, Math.min(slides.length-1, i));
+      slides.forEach((s,n)=> s.classList.toggle('active', n===idx));
+      prog.style.width = ((idx)/(slides.length-1))*100 + '%';
+      counter.textContent = (idx+1)+' / '+slides.length;
+      location.hash = '#/'+(idx+1); // enkel deeplink
+    }
+    document.getElementById('prev').onclick=()=>show(idx-1);
+    document.getElementById('next').onclick=()=>show(idx+1);
+    window.addEventListener('keydown', (e)=>{
+      if(e.key==='ArrowRight') show(idx+1);
+      if(e.key==='ArrowLeft') show(idx-1);
+      if(e.key.toLowerCase()==='f') toggleFs();
+    });
+    function toggleFs(){ const el=document.documentElement; if(!document.fullscreenElement){el.requestFullscreen?.();} else {document.exitFullscreen?.();} }
+    document.getElementById('fs').onclick=toggleFs;
+    // start på evt. hash
+    if(location.hash.startsWith('#/')){ const n=parseInt(location.hash.slice(2),10); if(!Number.isNaN(n)) idx=Math.min(Math.max(n-1,0), slides.length-1); }
+    show(idx);
 
-<script>
-  Reveal.initialize({
-    hash: true,
-    slideNumber: true,
-    transition: 'fade',
-    plugins: [ RevealMarkdown, RevealNotes ],
-    // justér marginer hvis du vil have mere "luft"
-    margin: 0.08
-  });
-</script>
+    // —— Quiz data (baseret på slide-facts) ——
+    const QA = [
+      {q:'Hvad er anledningen til dagens fejringer?', opts:['Nye åbningstider','Bibliotekets 50-års fødselsdag','Ny hjemmeside'], a:1},
+      {q:'Hvad kan du prøve for at få hjælp til litteratursøgning?', opts:['Primo Research Assistant','Photoshop','Excel'], a:0},
+      {q:'Hvor lang tid varer en vejledning ifølge slides?', opts:['30 minutter','1 time','2 timer'], a:1},
+      {q:'Hvor kan du stille spørgsmål til os?', opts:['Kun på sociale medier','Kun fysisk i skranken','På biblioteket og online'], a:2},
+      {q:'Hvad viser den korte rundvisning?', opts:['Kantinen og printerrummet','Studiepladser og grupperum','Kun bogsamlingen'], a:1}
+    ];
 
+    const quizEl = document.getElementById('quiz');
+    const scoreEl = document.getElementById('score');
+    function renderQuiz(){
+      quizEl.innerHTML='';
+      QA.forEach((item,i)=>{
+        const wrap = document.createElement('div');
+        wrap.className='q';
+        wrap.innerHTML = `<h4>${i+1}. ${item.q}</h4>`;
+        const opts = document.createElement('div');
+        opts.className='opts';
+        item.opts.forEach((label,j)=>{
+          const id = `q${i}o${j}`;
+          const opt = document.createElement('label');
+          opt.className='opt';
+          opt.innerHTML = `<input type="radio" name="q${i}" value="${j}" aria-label="${label}"> <span>${label}</span>`;
+          opts.appendChild(opt);
+        });
+        wrap.appendChild(opts);
+        quizEl.appendChild(wrap);
+      });
+      scoreEl.textContent = 'Score: 0/'+QA.length;
+    }
+
+    function checkAnswers(){
+      let score = 0;
+      const groups = quizEl.querySelectorAll('.q');
+      groups.forEach((g,i)=>{
+        const sel = g.querySelector('input[type="radio"]:checked');
+        const opts = g.querySelectorAll('.opt');
+        opts.forEach(o=> o.classList.remove('correct','wrong'));
+        if(sel){
+          const v = parseInt(sel.value,10);
+          if(v===QA[i].a){ score++; sel.closest('.opt').classList.add('correct'); }
+          else { sel.closest('.opt').classList.add('wrong');
+            // marker korrekt svar subtilt
+            opts[QA[i].a].classList.add('correct');
+          }
+        }
+      });
+      scoreEl.textContent = 'Score: '+score+'/'+QA.length;
+    }
+
+    function resetQuiz(){ renderQuiz(); }
+
+    document.getElementById('checkBtn').onclick = checkAnswers;
+    document.getElementById('resetBtn').onclick = resetQuiz;
+
+    renderQuiz();
+  </script>
 </body>
 </html>

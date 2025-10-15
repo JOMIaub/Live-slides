@@ -1,7 +1,14 @@
-/* Import af font */
+/* =============== Font (vælg ÉN af metoderne) =============== */
+/* A) Behold @import, hvis CSS skal kunne stå alene: */
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800&display=swap');
 
-/* Farver, spacing og generelle variabler */
+/* B) Alternativ (bedre performance): 
+   Link font i HTML:
+   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800&display=swap" rel="stylesheet">
+   ...og SLET @import-linjen ovenfor.
+*/
+
+/* =============== Variabler (farver, spacing) =============== */
 :root {
   --color-primary: #211a52;
   --color-secondary: #df8e2e;
@@ -9,19 +16,29 @@
   --color-accent: #594fbf;
   --color-white: #ffffff;
   --color-muted: rgba(255, 255, 255, 0.75);
+
   --radius: 16px;
   --btn-radius: 9999px;
+
   --pad-1: 12px;
   --pad-2: 20px;
   --gap: 24px;
+
   --maxw: 1920px;
   --slide-w: 1920px;
   --slide-h: 1080px;
 }
 
-/* Basis */
+/* =============== Basis =============== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { min-height: 100%; }
+
 body {
   background: #000;
+  color: #fff; /* ← vigtig: undgå sort tekst på sort baggrund */
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -29,19 +46,32 @@ body {
   gap: 40px;
   padding: 40px;
   font-family: "Barlow", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Slides */
-.slide, .slide * {
-  box-sizing: border-box;
+/* Smuk fokusmarkering for tastaturbrugere */
+:focus-visible {
+  outline: 3px solid var(--color-secondary-2);
+  outline-offset: 2px;
+  border-radius: 6px;
 }
+
+/* Mindre bevægelse hvis brugeren ønsker det */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* =============== Slides =============== */
+.slide,
+.slide * { box-sizing: border-box; }
 
 .slide {
   color: var(--color-white);
   background: var(--color-primary);
   width: 100%;
   max-width: var(--maxw);
-  aspect-ratio: 16/9;
+  aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
   border-radius: var(--radius);
@@ -50,7 +80,7 @@ body {
 .slide--fixed {
   width: var(--slide-w);
   height: var(--slide-h);
-  aspect-ratio: auto;
+  aspect-ratio: auto; /* tilsidesæt for eksakt 1920x1080 */
 }
 
 .slide__inner {
@@ -62,6 +92,7 @@ body {
   row-gap: var(--gap);
 }
 
+/* Toplinje (logo + chips) */
 .slide__top {
   display: flex;
   align-items: center;
@@ -74,6 +105,7 @@ body {
   display: block;
 }
 
+/* Indhold */
 .slide__content {
   align-self: center;
   max-width: 60ch;
@@ -102,13 +134,14 @@ body {
   color: var(--color-white);
 }
 
+/* CTA-område */
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--pad-1);
 }
 
-/* Knapper */
+/* =============== Knapper =============== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -118,7 +151,8 @@ body {
   font-weight: 700;
   text-decoration: none;
   border: 2px solid transparent;
-  transition: transform 0.12s ease, filter 0.12s ease, background-color 0.12s ease;
+  transition: transform 0.12s ease, filter 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
+  cursor: pointer;
 }
 
 .btn--primary {
@@ -126,7 +160,8 @@ body {
   color: #1a1506;
 }
 
-.btn--primary:hover {
+.btn--primary:hover,
+.btn--primary:focus-visible {
   transform: translateY(-1px);
   filter: brightness(1.05);
 }
@@ -137,12 +172,14 @@ body {
   border-color: var(--color-white);
 }
 
-.btn--ghost:hover {
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-white);
 }
 
-/* Label-chip */
+/* =============== Label-chip =============== */
 .chip {
   display: inline-block;
   padding: 8px 14px;
@@ -154,7 +191,7 @@ body {
   font-size: clamp(12px, 1.2vw, 16px);
 }
 
-/* Footer */
+/* =============== Footer =============== */
 .slide__footer {
   display: flex;
   align-items: center;
@@ -165,7 +202,7 @@ body {
   padding-top: var(--pad-1);
 }
 
-/* Dekorative accenter */
+/* =============== Dekorative accenter =============== */
 .accent-ring {
   position: absolute;
   right: -10%;
@@ -177,22 +214,20 @@ body {
   pointer-events: none;
 }
 
+/* Mere synlig, men diskret baggrundsgrafik */
 .bg-img {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
-  opacity: 0.15;
-  mix-blend-mode: screen;
+  opacity: 0.22;       /* øget lidt fra 0.15 */
+  /* Fjern blend-mode for sikrere synlighed på mørk bg */
+  /* mix-blend-mode: screen; */ 
   pointer-events: none;
 }
 
-/* Responsiv tilpasning */
+/* =============== Responsiv tilpasning =============== */
 @media (max-width: 640px) {
-  .slide__inner {
-    padding: 20px;
-  }
-  .actions {
-    gap: 10px;
-  }
+  .slide__inner { padding: 20px; }
+  .actions { gap: 10px; }
 }

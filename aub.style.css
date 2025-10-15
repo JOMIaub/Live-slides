@@ -1,0 +1,198 @@
+/* Import af font */
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800&display=swap');
+
+/* Farver, spacing og generelle variabler */
+:root {
+  --color-primary: #211a52;
+  --color-secondary: #df8e2e;
+  --color-secondary-2: #007fa3;
+  --color-accent: #594fbf;
+  --color-white: #ffffff;
+  --color-muted: rgba(255, 255, 255, 0.75);
+  --radius: 16px;
+  --btn-radius: 9999px;
+  --pad-1: 12px;
+  --pad-2: 20px;
+  --gap: 24px;
+  --maxw: 1920px;
+  --slide-w: 1920px;
+  --slide-h: 1080px;
+}
+
+/* Basis */
+body {
+  background: #000;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 40px;
+  font-family: "Barlow", Arial, sans-serif;
+}
+
+/* Slides */
+.slide, .slide * {
+  box-sizing: border-box;
+}
+
+.slide {
+  color: var(--color-white);
+  background: var(--color-primary);
+  width: 100%;
+  max-width: var(--maxw);
+  aspect-ratio: 16/9;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.slide--fixed {
+  width: var(--slide-w);
+  height: var(--slide-h);
+  aspect-ratio: auto;
+}
+
+.slide__inner {
+  position: absolute;
+  inset: 0;
+  padding: clamp(20px, 4vw, 80px);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  row-gap: var(--gap);
+}
+
+.slide__top {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+}
+
+.logo {
+  height: clamp(28px, 6vh, 64px);
+  width: auto;
+  display: block;
+}
+
+.slide__content {
+  align-self: center;
+  max-width: 60ch;
+}
+
+.kicker {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 6px;
+  font-size: clamp(12px, 1.2vw, 18px);
+}
+
+.headline {
+  margin: 0 0 12px;
+  line-height: 1.04;
+  font-weight: 800;
+  font-size: clamp(40px, 6vw, 88px);
+}
+
+.subhead {
+  margin: 0 0 var(--gap);
+  line-height: 1.35;
+  font-size: clamp(18px, 1.6vw, 28px);
+  color: var(--color-white);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pad-1);
+}
+
+/* Knapper */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: var(--btn-radius);
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: transform 0.12s ease, filter 0.12s ease, background-color 0.12s ease;
+}
+
+.btn--primary {
+  background: var(--color-secondary);
+  color: #1a1506;
+}
+
+.btn--primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-white);
+  border-color: var(--color-white);
+}
+
+.btn--ghost:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Label-chip */
+.chip {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: var(--btn-radius);
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
+  color: #1a1506;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: clamp(12px, 1.2vw, 16px);
+}
+
+/* Footer */
+.slide__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  font-size: clamp(12px, 1vw, 16px);
+  color: var(--color-muted);
+  padding-top: var(--pad-1);
+}
+
+/* Dekorative accenter */
+.accent-ring {
+  position: absolute;
+  right: -10%;
+  bottom: -25%;
+  width: min(70vmin, 900px);
+  height: min(70vmin, 900px);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(89, 79, 191, 0.22), transparent 62%);
+  pointer-events: none;
+}
+
+.bg-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Responsiv tilpasning */
+@media (max-width: 640px) {
+  .slide__inner {
+    padding: 20px;
+  }
+  .actions {
+    gap: 10px;
+  }
+}

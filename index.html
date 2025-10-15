@@ -22,24 +22,68 @@
     --pad:20px;
     --shadow:0 6px 24px rgba(33,26,82,.12);
     --focus: 0 0 0 3px #fff, 0 0 0 6px var(--clr-sec2);
-    --font:"Barlow", Arial, sans-serif;
+    --font:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     --font-bold:700;
     --font-xbold:800;
   }
   html,body{height:100%}
   body{
-    margin:0; font-family:var(--font); color:var(--clr-ink);
-    background:var(--clr-bg); -webkit-font-smoothing:antialiased;
+    margin:0;
+    font-family:var(--font);
+    color:var(--clr-ink);
+    background:var(--clr-bg);
+    -webkit-font-smoothing:antialiased;
   }
-  /* (Resten af din lokale CSS beholdes uændret her) */
+  /* Lille fallback-stil så siden ikke virker tom uden ekstern CSS */
+  .container{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  .card{
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+  }
+  h1{margin: 0 0 8px 0;}
+  h2{margin: 24px 0 8px 0;}
+  ul{margin: 0; padding-left: 20px;}
+  .muted{color: var(--clr-ink-weak); font-size: .95rem;}
 </style>
 
-<!-- ===== Ekstern AUB stylesheet (samme mappe) ===== -->
-<link rel="stylesheet" href="./aub.style.css" />
-
+<!-- ===== Ekstern AUB stylesheet (samme mappe) =====
+     Brug en simpel relativ sti. Hvis HTML og CSS ligger i samme mappe:
+     href="aub.style.css"  (case-sensitive på GitHub Pages) -->
+<link rel="stylesheet" href="aub.style.css" />
 </head>
 
 <body>
+<noscript>Aktivér JavaScript for at se indholdet.</noscript>
+
+<main id="app" class="container">
+  <header class="card">
+    <h1>Medialogi 2. sem — HCI & informationssøgning (AAUB)</h1>
+    <p class="muted">Denne side bruger <code>aub.style.css</code> til udseende og layout.</p>
+  </header>
+
+  <section id="goals" class="card" aria-labelledby="goals-title">
+    <h2 id="goals-title">Læringsmål</h2>
+    <ul id="goals-list"></ul>
+  </section>
+
+  <section id="agenda" class="card" aria-labelledby="agenda-title">
+    <h2 id="agenda-title">Agenda</h2>
+    <ul id="agenda-list"></ul>
+  </section>
+
+  <section id="quiz" class="card" aria-labelledby="quiz-title">
+    <h2 id="quiz-title">Quiz</h2>
+    <div id="quiz-list"></div>
+  </section>
+</main>
+
 <script>
 /* ======================= CONFIG (indhold/tekster) ======================= */
 const CONFIG = {
@@ -91,6 +135,75 @@ const CONFIG = {
     ]
   }
 };
+
+/* ============ Minimal rendering så siden ikke er tom ============ */
+function renderList(items, ul) {
+  ul.innerHTML = "";
+  items.forEach(text => {
+    const li = document.createElement("li");
+    li.textContent = text;
+    ul.appendChild(li);
+  });
+}
+
+function renderQuiz(quiz, container) {
+  container.innerHTML = "";
+  quiz.forEach((item, idx) => {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "14px";
+    const q = document.createElement("p");
+    q.innerHTML = `<strong>Q${idx+1}.</strong> ${item.q}`;
+    wrapper.appendChild(q);
+
+    item.options.forEach((opt, i) => {
+      const id = `q${idx}_opt${i}`;
+      const label = document.createElement("label");
+      label.setAttribute("for", id);
+      label.style.display = "block";
+      label.style.cursor = "pointer";
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = `q${idx}`;
+      input.id = id;
+      input.value = i;
+
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(" " + opt));
+      wrapper.appendChild(label);
+    });
+
+    const feedback = document.createElement("div");
+    feedback.className = "muted";
+    feedback.style.marginTop = "6px";
+    wrapper.appendChild(feedback);
+
+    wrapper.addEventListener("change", (e) => {
+      const val = Number(e.target.value);
+      if (val === item.correct) {
+        feedback.textContent = "✔ Korrekt! " + item.explain;
+      } else {
+        feedback.textContent = "✖ Ikke helt. " + item.explain;
+      }
+    });
+
+    container.appendChild(wrapper);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    renderList(CONFIG.texts.goals, document.getElementById("goals-list"));
+    renderList(CONFIG.texts.agenda, document.getElementById("agenda-list"));
+    renderQuiz(CONFIG.texts.quiz, document.getElementById("quiz-list"));
+  } catch (err) {
+    console.error("Render-fejl:", err);
+    const app = document.getElementById("app");
+    if (app) {
+      app.innerHTML = "<p>Der opstod en fejl under indlæsning af indholdet.</p>";
+    }
+  }
+});
 </script>
 </body>
 </html>

@@ -1,20 +1,16 @@
 /* =============== Font =============== */
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800&display=swap');
 
-/* =============== Variabler =============== */
+/* =============== Variabler (nyt tema) =============== */
 :root {
-  --color-primary: #211a52;   /* ink / hovedtekst */
-  --color-secondary: #df8e2e;
-  --color-secondary-2: #007fa3;
-  --color-accent: #594fbf;
+  --page-bg: #211a52;          /* mørk sidebaggrund */
+  --page-ink: #ffffff;         /* hvid standardtekst */
 
-  --white: #ffffff;
-  --muted-on-dark: rgba(255,255,255,.75);
+  --card-bg: #df8e2e;          /* boksfarve */
+  --card-ink: #211a52;         /* tekstfarve inde i bokse (kontrast!) */
 
-  /* Lyse overflader til kort/sektioner */
-  --surface: #f5f6ff;
-  --surface-2: #eef2ff;
-  --border: #d6d8f0;
+  --accent: #594fbf;
+  --accent-2: #007fa3;
 
   --radius: 16px;
   --btn-radius: 9999px;
@@ -27,19 +23,17 @@
   --slide-w: 1920px;
   --slide-h: 1080px;
 
-  --shadow: 0 6px 24px rgba(33,26,82,.12);
+  --shadow: 0 6px 24px rgba(0,0,0,.25);
+  --border-on-card: rgba(0,0,0,.15);
 }
 
 /* =============== Basis =============== */
-*,
-*::before,
-*::after { box-sizing: border-box; }
-
+*, *::before, *::after { box-sizing: border-box; }
 html, body { min-height: 100%; }
 
-body {
-  background: #000;        /* mørk sidebaggrund */
-  color: #fff;             /* hvid standardtekst på mørk baggrund */
+body{
+  background: var(--page-bg);
+  color: var(--page-ink);
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -53,7 +47,7 @@ body {
 
 /* Tastaturfokus */
 :focus-visible {
-  outline: 3px solid var(--color-secondary-2);
+  outline: 3px solid var(--accent-2);
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -62,51 +56,54 @@ body {
   * { transition: none !important; animation: none !important; }
 }
 
-/* =============== Kort/sektioner (DIN SIDE BRUGER .card) =============== */
-/* NØGLEFIX: mørk tekst på lyse kort */
-.card {
-  background: var(--surface);
-  color: var(--color-primary);           /* ← tving mørk tekst her */
-  border: 1px solid var(--border);
+/* =============== Cards/sektioner =============== */
+.card{
+  background: var(--card-bg);
+  color: var(--card-ink);                 /* vigtig: mørk tekst på orange */
+  border: 1px solid var(--border-on-card);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 16px 20px;
 }
 
-/* Sørg for, at alt inde i kort arver korrekt tekstfarve */
+/* alt inde i kort arver korrekt farve */
 .card h1, .card h2, .card h3,
 .card p, .card li, .card label,
-.card strong, .card em, .card span {
-  color: inherit;
-}
+.card strong, .card em, .card span { color: inherit; }
 
-.card .muted {
-  color: #5b597f; /* mørkere muted til lys baggrund */
-}
+/* bedre rytme mellem kort – og fjern “dobbelt” kantfølelse */
+.card + .card { margin-top: 14px; }
 
 /* Links i kort */
 .card a {
-  color: var(--color-accent);
+  color: var(--card-ink);
   text-underline-offset: 2px;
+  text-decoration-thickness: 2px;
+  border-bottom: 2px solid rgba(0,0,0,.25);
 }
-.card a:hover { text-decoration: underline; }
+.card a:hover {
+  border-bottom-color: rgba(0,0,0,.45);
+}
 
-/* Radio/labels i quiz */
+/* Fint label-cursor til quiz mm. */
 .card label { cursor: pointer; }
 
-/* =============== Slide-komponent (hvis du bruger den) =============== */
-.slide,
-.slide * { box-sizing: border-box; }
+/* Muted-tekst på orange baggrund */
+.card .muted { color: color-mix(in srgb, var(--card-ink) 70%, white 30%); }
+
+/* =============== (Valgfrit) Slide-komponent, hvis du bruger den =============== */
+.slide, .slide * { box-sizing: border-box; }
 
 .slide {
-  color: var(--white);                 /* slide-tekst er lys */
-  background: var(--color-primary);    /* slide-baggrund er mørk */
+  color: var(--page-ink);                 /* lys tekst */
+  background: var(--page-bg);             /* mørk slide */
   width: 100%;
   max-width: var(--maxw);
   aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
   border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 .slide--fixed {
@@ -124,136 +121,55 @@ body {
   row-gap: var(--gap);
 }
 
-/* Toplinje (logo + chip) */
-.slide__top {
-  display: flex;
-  align-items: center;
-  gap: var(--gap);
-}
-
-.logo {
-  height: clamp(28px, 6vh, 64px);
-  width: auto;
-  display: block;
-}
-
-/* Indhold */
-.slide__content {
-  align-self: center;
-  max-width: 60ch;
-}
+.slide__top { display: flex; align-items: center; gap: var(--gap); }
+.logo { height: clamp(28px, 6vh, 64px); width: auto; display: block; }
+.slide__content { align-self: center; max-width: 60ch; }
 
 .kicker {
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: .06em;
   text-transform: uppercase;
-  color: var(--muted-on-dark);
+  color: color-mix(in srgb, var(--page-ink) 75%, transparent);
   margin: 0 0 6px;
   font-size: clamp(12px, 1.2vw, 18px);
 }
 
-.headline {
-  margin: 0 0 12px;
-  line-height: 1.04;
-  font-weight: 800;
-  font-size: clamp(40px, 6vw, 88px);
-}
+.headline { margin: 0 0 12px; line-height: 1.04; font-weight: 800; font-size: clamp(40px, 6vw, 88px); }
+.subhead { margin: 0 0 var(--gap); line-height: 1.35; font-size: clamp(18px, 1.6vw, 28px); }
 
-.subhead {
-  margin: 0 0 var(--gap);
-  line-height: 1.35;
-  font-size: clamp(18px, 1.6vw, 28px);
-  color: var(--white);
-}
+/* Knapper */
+.actions { display: flex; flex-wrap: wrap; gap: var(--pad-1); }
 
-/* CTA-område */
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--pad-1);
-}
-
-/* =============== Knapper =============== */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
-  border-radius: var(--btn-radius);
-  font-weight: 700;
-  text-decoration: none;
-  border: 2px solid transparent;
-  transition: transform 0.12s ease, filter 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 20px; border-radius: var(--btn-radius);
+  font-weight: 700; text-decoration: none; border: 2px solid transparent;
+  transition: transform .12s ease, filter .12s ease, background-color .12s ease, border-color .12s ease;
   cursor: pointer;
 }
+.btn--primary { background: var(--card-bg); color: var(--card-ink); }
+.btn--primary:hover, .btn--primary:focus-visible { transform: translateY(-1px); filter: brightness(1.05); }
+.btn--ghost { background: transparent; color: var(--page-ink); border-color: var(--page-ink); }
+.btn--ghost:hover, .btn--ghost:focus-visible { transform: translateY(-1px); background: rgba(255,255,255,.1); }
 
-.btn--primary {
-  background: var(--color-secondary);
-  color: #1a1506;
-}
-.btn--primary:hover,
-.btn--primary:focus-visible {
-  transform: translateY(-1px);
-  filter: brightness(1.05);
-}
-
-.btn--ghost {
-  background: transparent;
-  color: var(--white);
-  border-color: var(--white);
-}
-.btn--ghost:hover,
-.btn--ghost:focus-visible {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--white);
-}
-
-/* =============== Chip =============== */
-.chip {
-  display: inline-block;
-  padding: 8px 14px;
-  border-radius: var(--btn-radius);
-  background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
-  color: #1a1506;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  font-size: clamp(12px, 1.2vw, 16px);
-}
-
-/* =============== Footer =============== */
+/* Footer */
 .slide__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--gap);
   font-size: clamp(12px, 1vw, 16px);
-  color: var(--muted-on-dark);
+  color: color-mix(in srgb, var(--page-ink) 75%, transparent);
   padding-top: var(--pad-1);
 }
 
-/* =============== Dekorative accenter =============== */
+/* Dekorative elementer */
 .accent-ring {
-  position: absolute;
-  right: -10%;
-  bottom: -25%;
-  width: min(70vmin, 900px);
-  height: min(70vmin, 900px);
+  position: absolute; right: -10%; bottom: -25%;
+  width: min(70vmin, 900px); height: min(70vmin, 900px);
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(89, 79, 191, 0.22), transparent 62%);
+  background: radial-gradient(closest-side, rgba(255,255,255,.12), transparent 62%);
   pointer-events: none;
 }
 
-.bg-img {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.22;    /* synlig men diskret */
-  pointer-events: none;
-}
-
-/* =============== Responsiv =============== */
+/* Responsiv */
 @media (max-width: 640px) {
   .slide__inner { padding: 20px; }
   .actions { gap: 10px; }

@@ -258,3 +258,7 @@ body {
   .slide__inner { padding: 20px; }
   .actions { gap: 10px; }
 }
+header .muted { 
+  display: none !important; 
+}
+

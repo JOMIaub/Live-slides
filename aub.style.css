@@ -263,5 +263,12 @@ header .muted {
   .classify{ grid-template-columns: 1fr; }
   .memory-grid{ grid-template-columns: repeat(3, minmax(90px, 1fr)); }
 }
+/* Kun aktivt slide skal vises */
+.slide { display: none; }
+.slide.is-active { display: block; }
+
+/* Slideshow-mode: undgå scroll */
+body.slideshow-mode { overflow: hidden; }
+
 
 

@@ -336,9 +336,11 @@
 
   // ===== Drag & Drop Classification =====
   (function() {
-    const pool = document.querySelector('#dragdrop .pool');
-    const dropzones = document.querySelectorAll('#dragdrop .dropzone');
-    const cards = document.querySelectorAll('#dragdrop .draggable');
+    const root = document.getElementById('dragdrop');
+    if (!root) return;
+    const pool = root.querySelector('.pool');
+    const dropzones = root.querySelectorAll('.dropzone');
+    const cards = root.querySelectorAll('.draggable');
     const checkBtn = document.getElementById('checkDrag');
     const resetBtn = document.getElementById('resetDrag');
     const feedback = document.getElementById('dragFeedback');
@@ -346,12 +348,17 @@
     let dragged = null;
 
     cards.forEach(card => {
-      card.addEventListener('dragstart', () => { dragged = card; card.classList.add('dragging'); });
+      card.addEventListener('dragstart', (e) => {
+        dragged = card;
+        card.classList.add('dragging');
+        try { e.dataTransfer.setData('text/plain', card.textContent || ''); } catch(_){}
+        if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+      });
       card.addEventListener('dragend', () => { dragged = null; card.classList.remove('dragging'); });
     });
 
     function enableZone(zone) {
-      zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('hover'); });
+      zone.addEventListener('dragover', (e) => { e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'; zone.classList.add('hover'); });
       zone.addEventListener('dragleave', () => zone.classList.remove('hover'));
       zone.addEventListener('drop', (e) => {
         e.preventDefault();
@@ -367,17 +374,17 @@
       let correct = 0, total = 0;
       dropzones.forEach(zone => {
         const expected = (zone.dataset.correct || '').split(',').map(s => s.trim()).filter(Boolean);
-        const items = Array.from(zone.children).map(c => c.textContent.trim());
+        const items = Array.from(zone.querySelectorAll('.draggable')).map(c => c.textContent.trim());
         total += expected.length;
         expected.forEach(name => { if (items.includes(name)) correct++; });
       });
-      const score = Math.round((correct / total) * 100);
+      const score = total ? Math.round((correct / total) * 100) : 0;
       feedback.textContent = `Rigtigt placeret: ${correct}/${total} (${score}%)`;
       feedback.className = score === 100 ? 'ok' : score >= 60 ? 'warn' : 'err';
     });
 
     resetBtn.addEventListener('click', () => {
-      Array.from(document.querySelectorAll('#dragdrop .dropzone .draggable')).forEach(card => pool.appendChild(card));
+      Array.from(root.querySelectorAll('.dropzone .draggable')).forEach(card => pool.appendChild(card));
       feedback.textContent = '';
     });
   })();

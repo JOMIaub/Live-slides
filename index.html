@@ -475,5 +475,72 @@
     setup();
   })();
   </script>
+  <script>
+    // --- Hardening script to enforce slide-by-slide navigation and keyboard control ---
+    (function(){
+      const deck = document.getElementById('deck');
+      if (!deck) return;
+      const slides = Array.from(deck.querySelectorAll('.slide'));
+      const nowEl = document.getElementById('now');
+      const totalEl = document.getElementById('total');
+      const progress = document.getElementById('progress');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      document.body.classList.add('slideshow-mode');
+      document.body.style.overflow = 'hidden';
+      if (totalEl) totalEl.textContent = String(slides.length);
+
+      function setActive(i){
+        const idx = Math.max(0, Math.min(i, slides.length-1));
+        slides.forEach((s, j)=>{
+          const active = j===idx;
+          s.classList.toggle('is-active', active);
+          s.hidden = !active;
+          s.setAttribute('aria-hidden', String(!active));
+        });
+        if (nowEl) nowEl.textContent = String(idx+1);
+        if (progress){
+          progress.style.setProperty('--progress', (idx+1)/slides.length);
+          progress.setAttribute('aria-valuenow', String(idx+1));
+        }
+        document.title = (slides[idx].dataset.title || 'Slide') + ' – Publikationstyper';
+        location.hash = '#' + (idx+1);
+      }
+
+      function currentIndex(){
+        return Math.max(0, slides.findIndex(s=>s.classList.contains('is-active')));
+      }
+      function go(delta){ setActive(currentIndex()+delta); }
+
+      // init
+      slides.forEach((s,j)=>{ s.hidden = j!==0; s.setAttribute('aria-hidden', String(j!==0)); });
+      slides[0].classList.add('is-active');
+      const fromHash = Number(location.hash.replace('#',''))-1;
+      if (!Number.isNaN(fromHash) && fromHash>=0) setActive(fromHash); else setActive(0);
+
+      // keys (prevent page scroll)
+      document.addEventListener('keydown', (e)=>{
+        const c = e.code;
+        if (['ArrowRight','PageDown','KeyD','ArrowLeft','PageUp','KeyA','Home','End','KeyF'].includes(c)) e.preventDefault();
+        if (['ArrowRight','PageDown','KeyD'].includes(c)) go(1);
+        if (['ArrowLeft','PageUp','KeyA'].includes(c)) go(-1);
+        if (c==='Home') setActive(0);
+        if (c==='End') setActive(slides.length-1);
+        if (c==='KeyF'){
+          const de = document.documentElement;
+          if (!document.fullscreenElement) de.requestFullscreen?.(); else document.exitFullscreen?.();
+        }
+      });
+
+      prevBtn?.addEventListener('click', ()=>go(-1));
+      nextBtn?.addEventListener('click', ()=>go(1));
+      progress?.addEventListener('click', (e)=>{
+        const r = progress.getBoundingClientRect();
+        const ratio = (e.clientX - r.left) / r.width;
+        setActive(Math.floor(ratio * slides.length));
+      });
+    })();
+  </script>
 </body>
 </html>

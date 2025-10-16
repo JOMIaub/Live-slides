@@ -175,12 +175,12 @@
       <p>Træk kortene til den rigtige kategori.</p>
       <div class="classify">
         <div class="pool" aria-label="Kort der kan trækkes" role="list">
-          <button class="card draggable" draggable="true">Peer-reviewed artikel</button>
-          <button class="card draggable" draggable="true">Populærvidenskabelig bog</button>
-          <button class="card draggable" draggable="true">Konferenceproceeding</button>
-          <button class="card draggable" draggable="true">Avisartikel</button>
-          <button class="card draggable" draggable="true">Ph.d.-afhandling</button>
-          <button class="card draggable" draggable="true">Konsulentrapport</button>
+          <button type="button" class="card draggable" draggable="true">Peer-reviewed artikel</button>
+          <button type="button" class="card draggable" draggable="true">Populærvidenskabelig bog</button>
+          <button type="button" class="card draggable" draggable="true">Konferenceproceeding</button>
+          <button type="button" class="card draggable" draggable="true">Avisartikel</button>
+          <button type="button" class="card draggable" draggable="true">Ph.d.-afhandling</button>
+          <button type="button" class="card draggable" draggable="true">Konsulentrapport</button>
         </div>
         <div class="bins">
           <div class="bin" data-accept="scientific" aria-label="Videnskabelig" role="listbox">
@@ -345,14 +345,22 @@
     const resetBtn = document.getElementById('resetDrag');
     const feedback = document.getElementById('dragFeedback');
 
+    // Globale handlers for at sikre at browseren tillader drop
+    document.addEventListener('dragover', (e)=>{ e.preventDefault(); });
+    document.addEventListener('drop', (e)=>{ e.preventDefault(); });
+
     let dragged = null;
 
     cards.forEach(card => {
       card.addEventListener('dragstart', (e) => {
         dragged = card;
         card.classList.add('dragging');
-        try { e.dataTransfer.setData('text/plain', card.textContent || ''); } catch(_){}
-        if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+        try {
+          e.dataTransfer.setData('text/plain', card.textContent || '');
+          e.dataTransfer.effectAllowed = 'move';
+          // Brug selve elementet som drag-image (mere stabilt i nogle browsere)
+          e.dataTransfer.setDragImage(card, 10, 10);
+        } catch(_){}
       });
       card.addEventListener('dragend', () => { dragged = null; card.classList.remove('dragging'); });
     });

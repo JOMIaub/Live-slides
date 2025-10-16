@@ -1,206 +1,460 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="da">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Medialogi 2. sem — HCI & informationssøgning (AAUB)</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Publikationstyper – AUB</title>
+  <!--
+    HTML Udvikler til TIK
+    Slideshow-præsentation baseret på "Publikationstyper"-powerpointen.
+    Indhold er struktureret i semantiske <section class="slide"> elementer.
+    Udseende styres i separat stylesheet: aub.style.css (læg i samme repo/sti).
 
-<!-- ===== Lokale basestile (kan overstyres af aub.style.css) ===== -->
-<style>
-  :root{
-    --clr-bg:#FFFFFF;
-    --clr-ink:#211a52;              /* Primær */
-    --clr-ink-weak:#42406b;
-    --clr-accent:#594fbf;           /* Accent */
-    --clr-sec1:#df8e2e;             /* Sekundær */
-    --clr-sec2:#007fa3;             /* Sekundær */
-    --clr-surface:#f5f6ff;
-    --clr-surface-2:#eef2ff;
-    --clr-border:#d6d8f0;
-    --radius:16px;
-    --radius-lg:20px;
-    --pad:20px;
-    --shadow:0 6px 24px rgba(33,26,82,.12);
-    --focus: 0 0 0 3px #fff, 0 0 0 6px var(--clr-sec2);
-    --font:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    --font-bold:700;
-    --font-xbold:800;
-  }
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family:var(--font);
-    color:var(--clr-ink);
-    background:var(--clr-bg);
-    -webkit-font-smoothing:antialiased;
-  }
-  /* Lille fallback-stil så siden ikke virker tom uden ekstern CSS */
-  .container{
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 24px;
-  }
-  .card{
-    background: var(--clr-surface);
-    border: 1px solid var(--clr-border);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    box-shadow: var(--shadow);
-  }
-  h1{margin: 0 0 8px 0;}
-  h2{margin: 24px 0 8px 0;}
-  ul{margin: 0; padding-left: 20px;}
-  .muted{color: var(--clr-ink-weak); font-size: .95rem;}
-</style>
+    Designhooks (følger AUB standarder - styles i CSS):
+    - Skrifttyper: .font-barlow, .font-barlow-bold, .font-barlow-xbold
+    - Farver via CSS-variabler (definér i aub.style.css): --aub-primary, --aub-secondary, --aub-accent, --aub-bg
+    - Knapper: .btn (afrundede hjørner, padding 10px 20px), .btn-primary, .btn-ghost
+    - Layout: .deck, .slide, .content, .grid, .two-col, .center, .cover
+    - Hjælpeklasser: .sr-only, .muted, .kicker, .badge, .note
 
-<!-- ===== Ekstern AUB stylesheet (samme mappe) ===== -->
-<link rel="stylesheet" href="aub.style.css" />
+    Navigation:
+    - Piletaster ←/→ eller A/D, PgUp/PgDn
+    - Klik på frem/tilbage-knapperne
+    - Klik på progressbar for at hoppe
+
+    Microgames:
+    - Slide 12: Drag & drop klassifikation
+    - Slide 13: Multiple choice quiz
+    - Slide 14: Vendespil (memory)
+  -->
+  <link rel="stylesheet" href="aub.style.css" />
 </head>
-
-<body>
-<noscript>Aktivér JavaScript for at se indholdet.</noscript>
-
-<main id="app" class="container">
-  <header class="card">
-    <h1>Medialogi 2. sem — HCI & informationssøgning (AAUB)</h1>
+<body class="font-barlow" data-theme="aub">
+  <header class="deck-header" role="banner">
+    <div class="brand">
+      <img src="https://learninglib.org/wp-content/uploads/2025/10/AUB-logo-da-1.png" alt="Aalborg Universitetsbibliotek – logo" class="logo" />
+      <img src="https://learninglib.org/wp-content/uploads/2025/10/AAU_CENTER_WHITE.png" alt="Aalborg Universitet – logo" class="logo-alt" />
+    </div>
+    <nav class="controls" aria-label="Slidenav">
+      <button id="prevBtn" class="btn btn-ghost" aria-keyshortcuts="ArrowLeft PageUp A">◀ Forrige</button>
+      <button id="nextBtn" class="btn btn-primary" aria-keyshortcuts="ArrowRight PageDown D">Næste ▶</button>
+    </nav>
   </header>
 
-  <section id="goals" class="card" aria-labelledby="goals-title">
-    <h2 id="goals-title">Læringsmål</h2>
-    <ul id="goals-list"></ul>
-  </section>
+  <main id="deck" class="deck" role="region" aria-roledescription="slideshow" aria-live="polite">
 
-  <section id="agenda" class="card" aria-labelledby="agenda-title">
-    <h2 id="agenda-title">Agenda</h2>
-    <ul id="agenda-list"></ul>
-  </section>
+    <!-- Slide 1: Forside -->
+    <section class="slide cover center" data-title="Publikationstyper – forside">
+      <h1 class="font-barlow-xbold">Publikationstyper</h1>
+      <p class="kicker">Introduktion til videnskabelig litteratur</p>
+      <figure class="hero">
+        <img src="https://learninglib.org/wp-content/uploads/2025/10/COLOURBOX68255171-ezgif.com-gif-maker.gif" alt="Animeret AI-bot der søger information" />
+        <figcaption class="sr-only">AI bot illustration</figcaption>
+      </figure>
+      <footer class="meta">Team Informationskompetence · Aalborg Universitetsbibliotek</footer>
+    </section>
 
-  <section id="quiz" class="card" aria-labelledby="quiz-title">
-    <h2 id="quiz-title">Quiz</h2>
-    <div id="quiz-list"></div>
-  </section>
-</main>
+    <!-- Slide 2: Formålet med videnskabelig litteratur -->
+    <section class="slide" data-title="Formål med videnskabelig litteratur">
+      <h2 class="font-barlow-bold">Hvad er formålet med videnskabelig litteratur?</h2>
+      <ul class="big">
+        <li><strong>Vidensdeling</strong>: Sprede ny forskning og indsigt</li>
+        <li><strong>Videnopbygning</strong>: Udvikle teorier og forståelse</li>
+        <li><strong>Evidensgrundlag</strong>: Understøtte akademiske argumenter</li>
+        <li><strong>Akademisk dialog</strong>: Muliggøre kritik og viderebygning</li>
+      </ul>
+      <aside class="note">Definition: Tekster skrevet af forskere til forskere.</aside>
+      <figure class="side">
+        <img src="https://learninglib.org/wp-content/uploads/2025/10/IMG_0048-scaled.jpg" alt="Studerende i studiesamlingen" />
+      </figure>
+    </section>
 
-<script>
-/* ======================= CONFIG (indhold/tekster) ======================= */
-const CONFIG = {
-  modules: ["quiz","dragdrop","querybuilder","sus"],
-  pointsEnabled: true,
-  printEnabled: true,
-  texts: {
-    goals: [
-      "Anvende HCI- og interaktionsdesign-principper til at planlægge og evaluere en mobil app i PBL-kontekst",
-      "Udforme reproducerbare søgestrategier (AND/OR/NOT, trunkering) i Scopus/ACM/IEEE og dokumentere dem",
-      "Udføre en letvægts-UX-evaluering (heuristikker + SUS) og oversætte fund til designforbedringer"
-    ],
-    agenda: [
-      "00:00–00:05 – Intro, læringsmål og format",
-      "00:05–00:15 – HCI i Medialogi: MMI, interaktionsdesign, mobilapp",
-      "00:15–00:25 – Databaser & værktøjer (Scopus, ACM DL, IEEE Xplore, PRIMO, Zotero/Mendeley)",
-      "00:25–00:40 – Interaktiv quiz: kildekritik og relevans",
-      "00:40–00:45 – Spørgsmål & opsamling (blok 1)",
-      "00:45–01:00 – Pause (15 min)",
-      "01:00–01:10 – Drag & drop: HCI-begreber",
-      "01:10–01:20 – Søgestreng-bygger (fra behov til forespørgsel)",
-      "01:20–01:30 – Snowballing (trinvis miniøvelse)",
-      "01:30–01:40 – SUS mini-survey på demo-flow",
-      "01:40–01:45 – Case & næste skridt (blok 2)"
-    ],
-    quiz: [
-      {
-        q: "Hvad indikerer en ‘controlled vocabulary’ (fx IEEE Thesaurus) i en database?",
-        options: [
-          "At alle artikler er peer-reviewed",
-          "At søgeord normaliseres til standardtermer",
-          "At databasen kun dækker 2020-nuværende",
-          "At søgning altid er booleansk"
-        ],
-        correct: 1,
-        explain: "Kontrollerede termer (emneord) sikrer konsistent indeksering og bedre tilbagefindelighed."
-      },
-      {
-        q: "Hvilken kombination giver DEN bredeste søgning?",
-        options: [
-          "mobile AND onboarding",
-          "mobile OR smartphone",
-          "\"mobile onboarding\"",
-          "mobile NOT game"
-        ],
-        correct: 1,
-        explain: "OR udvider mængden ved at inkludere synonymer/relaterede termer."
-      }
-    ]
-  }
-};
+    <!-- Slide 3: Kendetegn -->
+    <section class="slide" data-title="Kendetegn ved videnskabelig litteratur">
+      <h2 class="font-barlow-bold">Hvad kendetegner videnskabelig litteratur?</h2>
+      <div class="two-col">
+        <ul>
+          <li><strong>Fagfællebedømt</strong> (peer-reviewed)</li>
+          <li><strong>Formel struktur</strong>: abstract, introduktion, metode, resultater, diskussion</li>
+          <li><strong>Referencer</strong> og kilder</li>
+          <li><strong>Adgang</strong>: Ofte bag betalingsmur · <em>Open Access</em> findes</li>
+        </ul>
+        <figure>
+          <img src="https://learninglib.org/wp-content/uploads/2025/10/search-1508_256.gif" alt="Søgeanimeret GIF" />
+        </figure>
+      </div>
+    </section>
 
-/* ============ Minimal rendering så siden ikke er tom ============ */
-function renderList(items, ul) {
-  ul.innerHTML = "";
-  items.forEach(text => {
-    const li = document.createElement("li");
-    li.textContent = text;
-    ul.appendChild(li);
-  });
-}
+    <!-- Slide 4: Typer -->
+    <section class="slide" data-title="Typer af videnskabelig litteratur">
+      <h2 class="font-barlow-bold">Typer af videnskabelig litteratur</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Videnskabelige artikler</h3>
+          <p>Udgives i tidsskrifter (journals)</p>
+        </article>
+        <article class="card">
+          <h3>Bøger</h3>
+          <p>Fagbøger via akademiske forlag</p>
+        </article>
+        <article class="card">
+          <h3>Konferenceproceedings</h3>
+          <p>Resultater præsenteret og publiceret via konferencer</p>
+        </article>
+        <article class="card">
+          <h3>Afhandlinger</h3>
+          <p>Universitets-/akademiske forlag</p>
+        </article>
+      </div>
+      <p class="muted">Universitetsbiblioteker giver adgang til databaser, e-bøger, tidsskrifter og fysiske materialer.</p>
+    </section>
 
-function renderQuiz(quiz, container) {
-  container.innerHTML = "";
-  quiz.forEach((item, idx) => {
-    const wrapper = document.createElement("div");
-    wrapper.style.marginBottom = "14px";
-    const q = document.createElement("p");
-    q.innerHTML = `<strong>Q${idx+1}.</strong> ${item.q}`;
-    wrapper.appendChild(q);
+    <!-- Slide 5: Andre former -->
+    <section class="slide" data-title="Andre former for litteratur og information">
+      <h2 class="font-barlow-bold">Andre former for litteratur og information</h2>
+      <ul class="big">
+        <li>Populærvidenskabelige bøger</li>
+        <li>Avis- og magasinartikler</li>
+        <li>Rapporter</li>
+        <li>Tal- og statistikmateriale</li>
+      </ul>
+      <figure class="side">
+        <img src="https://learninglib.org/wp-content/uploads/2025/10/2WB5839.jpg" alt="Gruppearbejde på biblioteket" />
+      </figure>
+    </section>
 
-    item.options.forEach((opt, i) => {
-      const id = `q${idx}_opt${i}`;
-      const label = document.createElement("label");
-      label.setAttribute("for", id);
-      label.style.display = "block";
-      label.style.cursor = "pointer";
+    <!-- Slide 6: Eksempel – artikel -->
+    <section class="slide" data-title="Eksempel: Videnskabelig artikel">
+      <h2 class="font-barlow-bold">Eksempel: Videnskabelig artikel</h2>
+      <blockquote class="ref">
+        Feuerriegel, S., Hartmann, J., Janiesch, C., &amp; Zschech, P. (2024). <em>Generative AI.</em> Business &amp; Information Systems Engineering, 66(1), 111–126. https://doi.org/10.1007/s12599-023-00834-7
+      </blockquote>
+      <p>Struktur: abstract → metode → resultater → diskussion → referencer.</p>
+    </section>
 
-      const input = document.createElement("input");
-      input.type = "radio";
-      input.name = `q${idx}`;
-      input.id = id;
-      input.value = i;
+    <!-- Slide 7: Eksempel – bog -->
+    <section class="slide" data-title="Eksempel: Videnskabelig bog">
+      <h2 class="font-barlow-bold">Eksempel: Videnskabelig bog</h2>
+      <blockquote class="ref">
+        Taulli, T. (2023). <em>Generative AI: How ChatGPT and Other AI Tools Will Revolutionize Business</em> (1st ed.). Apress. https://doi.org/10.1007/978-1-4842-9367-6
+      </blockquote>
+      <p>Bøger går i dybden med et emne og udgives af akademiske forlag.</p>
+    </section>
 
-      label.appendChild(input);
-      label.appendChild(document.createTextNode(" " + opt));
-      wrapper.appendChild(label);
-    });
+    <!-- Slide 8: Eksempel – proceeding -->
+    <section class="slide" data-title="Eksempel: Konferenceproceeding">
+      <h2 class="font-barlow-bold">Eksempel: Konferenceproceeding</h2>
+      <blockquote class="ref">
+        Simaremare, M., Rico, S., &amp; Triando, D. B. (2025). <em>Exploring the Potential of Generative AI: Use Cases in Software Startups.</em> XP 2024 Workshops, Bozen-Bolzano, Italy, June 4–7, 2024, Revised Selected Papers, 3. https://doi.org/10.1007/978-3-031-72781-8_1
+      </blockquote>
+      <p>Konferencebidrag afspejler nyeste forskning og er ofte første offentliggørelse af resultater.</p>
+    </section>
 
-    const feedback = document.createElement("div");
-    feedback.className = "muted";
-    feedback.style.marginTop = "6px";
-    wrapper.appendChild(feedback);
+    <!-- Slide 9: Hvornår bruge videnskabelig litteratur -->
+    <section class="slide" data-title="Hvornår bruger du videnskabelig litteratur?">
+      <h2 class="font-barlow-bold">Du skal bruge videnskabelig litteratur for at …</h2>
+      <ul class="big">
+        <li>bygge videre på andres viden</li>
+        <li>underbygge konklusioner og argumenter</li>
+        <li>understøtte empiri, observationer og tests</li>
+        <li>opnå dyb indsigt i et emne</li>
+      </ul>
+    </section>
 
-    wrapper.addEventListener("change", (e) => {
-      const val = Number(e.target.value);
-      if (val === item.correct) {
-        feedback.textContent = "✔ Korrekt! " + item.explain;
-      } else {
-        feedback.textContent = "✖ Ikke helt. " + item.explain;
-      }
-    });
+    <!-- Slide 10: Hvordan bruge andre former -->
+    <section class="slide" data-title="Hvordan kan du bruge andre former?">
+      <h2 class="font-barlow-bold">Du kan bruge andre former for litteratur til …</h2>
+      <ul class="big">
+        <li>at motivere problemformulering</li>
+        <li>at få overblik og forstå problemstillinger</li>
+        <li>at finde tal, statistik og cases</li>
+        <li>at supplere med perspektiver og kontekst</li>
+      </ul>
+    </section>
 
-    container.appendChild(wrapper);
-  });
-}
+    <!-- Slide 11: Microgame – Drag & Drop klassifikation -->
+    <section class="slide" data-title="Øvelse: Klassificér publikationer" id="dragdrop">
+      <h2 class="font-barlow-bold">Øvelse: Træk og slip – Hvad er videnskabeligt?</h2>
+      <p>Træk kortene til den rigtige kategori.</p>
+      <div class="classify">
+        <div class="pool" aria-label="Kort der kan trækkes" role="list">
+          <button class="card draggable" draggable="true">Peer-reviewed artikel</button>
+          <button class="card draggable" draggable="true">Populærvidenskabelig bog</button>
+          <button class="card draggable" draggable="true">Konferenceproceeding</button>
+          <button class="card draggable" draggable="true">Avisartikel</button>
+          <button class="card draggable" draggable="true">Ph.d.-afhandling</button>
+          <button class="card draggable" draggable="true">Konsulentrapport</button>
+        </div>
+        <div class="bins">
+          <div class="bin" data-accept="scientific" aria-label="Videnskabelig" role="listbox">
+            <h3>Videnskabelig</h3>
+            <div class="dropzone" data-correct="Peer-reviewed artikel,Konferenceproceeding,Ph.d.-afhandling"></div>
+          </div>
+          <div class="bin" data-accept="other" aria-label="Andre former" role="listbox">
+            <h3>Andre former</h3>
+            <div class="dropzone" data-correct="Populærvidenskabelig bog,Avisartikel,Konsulentrapport"></div>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="checkDrag">Tjek svar</button>
+        <button class="btn btn-ghost" id="resetDrag">Nulstil</button>
+        <span id="dragFeedback" role="status" aria-live="polite"></span>
+      </div>
+    </section>
 
-document.addEventListener("DOMContentLoaded", () => {
-  try {
-    renderList(CONFIG.texts.goals, document.getElementById("goals-list"));
-    renderList(CONFIG.texts.agenda, document.getElementById("agenda-list"));
-    renderQuiz(CONFIG.texts.quiz, document.getElementById("quiz-list"));
-  } catch (err) {
-    console.error("Render-fejl:", err);
-    const app = document.getElementById("app");
-    if (app) {
-      app.innerHTML = "<p>Der opstod en fejl under indlæsning af indholdet.</p>";
+    <!-- Slide 12: Micro-quiz – Multiple choice -->
+    <section class="slide" data-title="Quiz: Publikationstyper" id="mcq">
+      <h2 class="font-barlow-bold">Hurtig quiz</h2>
+      <form class="quiz" id="quizForm">
+        <fieldset>
+          <legend>1) Hvad betyder fagfællebedømt?</legend>
+          <label><input type="radio" name="q1" value="a" /> At artiklen er redigeret af en journalist</label>
+          <label><input type="radio" name="q1" value="b" /> At eksperter i feltet har vurderet kvaliteten</label>
+          <label><input type="radio" name="q1" value="c" /> At den er gratis at læse</label>
+        </fieldset>
+        <fieldset>
+          <legend>2) Hvilken struktur ses ofte i artikler?</legend>
+          <label><input type="radio" name="q2" value="a" /> Indledning – Reklame – Konklusion</label>
+          <label><input type="radio" name="q2" value="b" /> Abstract – Metode – Resultater – Diskussion</label>
+          <label><input type="radio" name="q2" value="c" /> Forord – Lyrik – Efterskrift</label>
+        </fieldset>
+        <fieldset>
+          <legend>3) Hvad kendetegner konferenceproceedings?</legend>
+          <label><input type="radio" name="q3" value="a" /> Samler bidrag fra en konference</label>
+          <label><input type="radio" name="q3" value="b" /> Er altid populærvidenskabelige</label>
+          <label><input type="radio" name="q3" value="c" /> Skrives af journalister</label>
+        </fieldset>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="submitQuiz">Tjek svar</button>
+          <button type="reset" class="btn btn-ghost">Nulstil</button>
+          <output id="quizFeedback" role="status" aria-live="polite"></output>
+        </div>
+      </form>
+    </section>
+
+    <!-- Slide 13: Microgame – Vendespil (memory) -->
+    <section class="slide" data-title="Vendespil: Match begreber" id="memory">
+      <h2 class="font-barlow-bold">Vendespil: Match begreber</h2>
+      <p>Find par mellem publikationstype og kendetegn.</p>
+      <div class="memory-grid" id="memoryGrid" aria-label="Vendespil" role="grid"></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="resetMemory">Start forfra</button>
+        <span id="memoryFeedback" role="status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <!-- Slide 14: Takeaways -->
+    <section class="slide" data-title="Takeaways" id="takeaways">
+      <h2 class="font-barlow-bold">4 ting du kan tage med</h2>
+      <ol class="big">
+        <li><strong>Kend formålet</strong>: Videnskabelige kilder driver viden og dialog.</li>
+        <li><strong>Tjek kendetegn</strong>: Peer review, struktur, referencer.</li>
+        <li><strong>Vælg formatet</strong>: Artikel, bog, proceeding, afhandling – alt efter behov.</li>
+        <li><strong>Brug bredt</strong>: Kombinér videnskabelige og andre kilder med kritisk sans.</li>
+      </ol>
+    </section>
+
+  </main>
+
+  <footer class="deck-footer" role="contentinfo">
+    <div class="progress" id="progress" aria-label="Fremdrift" role="slider" aria-valuemin="1" aria-valuemax="14" aria-valuenow="1"></div>
+    <div class="index" id="index">Slide <span id="now">1</span>/<span id="total">14</span></div>
+  </footer>
+
+  <script>
+  // ===== Slideshow Engine (vanilla JS) =====
+  (function() {
+    const deck = document.getElementById('deck');
+    const slides = Array.from(deck.querySelectorAll('.slide'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const nowEl = document.getElementById('now');
+    const totalEl = document.getElementById('total');
+    const progress = document.getElementById('progress');
+
+    let index = 0;
+    totalEl.textContent = slides.length;
+
+    function show(i) {
+      index = Math.max(0, Math.min(i, slides.length - 1));
+      slides.forEach((s, idx) => {
+        s.hidden = idx !== index;
+        s.setAttribute('aria-hidden', idx !== index);
+      });
+      nowEl.textContent = index + 1;
+      progress.style.setProperty('--progress', (index + 1) / slides.length);
+      progress.setAttribute('aria-valuenow', String(index + 1));
+      document.title = (slides[index].dataset.title || 'Slide') + ' – Publikationstyper';
+      location.hash = '#'+(index+1);
     }
-  }
-});
-</script>
+
+    function next() { show(index + 1); }
+    function prev() { show(index - 1); }
+
+    // Init
+    slides.forEach((s, idx) => {
+      if (idx !== 0) { s.hidden = true; s.setAttribute('aria-hidden', 'true'); }
+    });
+    const fromHash = Number(location.hash.replace('#','')) - 1;
+    if (!Number.isNaN(fromHash) && fromHash >= 0) show(fromHash); else show(0);
+
+    // Events
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+    document.addEventListener('keydown', (e) => {
+      if (['ArrowRight','PageDown','KeyD'].includes(e.code)) next();
+      if (['ArrowLeft','PageUp','KeyA'].includes(e.code)) prev();
+      if (e.code === 'Home') show(0);
+      if (e.code === 'End') show(slides.length - 1);
+    });
+    progress.addEventListener('click', (e) => {
+      const rect = progress.getBoundingClientRect();
+      const ratio = (e.clientX - rect.left) / rect.width;
+      show(Math.floor(ratio * slides.length));
+    });
+  })();
+
+  // ===== Drag & Drop Classification =====
+  (function() {
+    const pool = document.querySelector('#dragdrop .pool');
+    const dropzones = document.querySelectorAll('#dragdrop .dropzone');
+    const cards = document.querySelectorAll('#dragdrop .draggable');
+    const checkBtn = document.getElementById('checkDrag');
+    const resetBtn = document.getElementById('resetDrag');
+    const feedback = document.getElementById('dragFeedback');
+
+    let dragged = null;
+
+    cards.forEach(card => {
+      card.addEventListener('dragstart', () => { dragged = card; card.classList.add('dragging'); });
+      card.addEventListener('dragend', () => { dragged = null; card.classList.remove('dragging'); });
+    });
+
+    function enableZone(zone) {
+      zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('hover'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('hover'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('hover');
+        if (dragged) zone.appendChild(dragged);
+      });
+    }
+
+    dropzones.forEach(enableZone);
+    enableZone(pool);
+
+    checkBtn.addEventListener('click', () => {
+      let correct = 0, total = 0;
+      dropzones.forEach(zone => {
+        const expected = (zone.dataset.correct || '').split(',').map(s => s.trim()).filter(Boolean);
+        const items = Array.from(zone.children).map(c => c.textContent.trim());
+        total += expected.length;
+        expected.forEach(name => { if (items.includes(name)) correct++; });
+      });
+      const score = Math.round((correct / total) * 100);
+      feedback.textContent = `Rigtigt placeret: ${correct}/${total} (${score}%)`;
+      feedback.className = score === 100 ? 'ok' : score >= 60 ? 'warn' : 'err';
+    });
+
+    resetBtn.addEventListener('click', () => {
+      Array.from(document.querySelectorAll('#dragdrop .dropzone .draggable')).forEach(card => pool.appendChild(card));
+      feedback.textContent = '';
+    });
+  })();
+
+  // ===== Multiple Choice Quiz =====
+  (function() {
+    const answers = { q1: 'b', q2: 'b', q3: 'a' };
+    const form = document.getElementById('quizForm');
+    const submit = document.getElementById('submitQuiz');
+    const out = document.getElementById('quizFeedback');
+
+    submit.addEventListener('click', () => {
+      let correct = 0, total = 0;
+      for (const [q, ans] of Object.entries(answers)) {
+        total++;
+        const chosen = form.querySelector(`input[name="${q}"]:checked`);
+        if (chosen && chosen.value === ans) correct++;
+      }
+      const pct = Math.round((correct/total)*100);
+      out.value = `Du fik ${correct}/${total} rigtige (${pct}%)`;
+    });
+  })();
+
+  // ===== Vendespil (Memory) =====
+  (function() {
+    const grid = document.getElementById('memoryGrid');
+    const reset = document.getElementById('resetMemory');
+    const feedback = document.getElementById('memoryFeedback');
+
+    const pairs = [
+      ['Artikel', 'Udgives i journal'],
+      ['Bog', 'Akademisk forlag'],
+      ['Proceeding', 'Konferencebidrag'],
+      ['Afhandling', 'Universitetsforlag'],
+      ['Peer review', 'Fagfællebedømt'],
+      ['Open Access', 'Fri tilgængelig']
+    ];
+
+    let first = null, lock = false, matched = 0;
+
+    function setup() {
+      grid.innerHTML = '';
+      feedback.textContent = '';
+      first = null; lock = false; matched = 0;
+
+      const deck = [];
+      pairs.forEach(([a,b]) => { deck.push({text:a, id:a}); deck.push({text:b, id:a}); });
+      // shuffle
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+
+      deck.forEach((card, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'memo-card';
+        btn.setAttribute('aria-pressed', 'false');
+        btn.dataset.id = card.id;
+        btn.dataset.index = String(idx);
+        btn.innerHTML = '<span class="front">?</span><span class="back">'+card.text+'</span>';
+        btn.addEventListener('click', () => flip(btn));
+        grid.appendChild(btn);
+      });
+    }
+
+    function flip(btn) {
+      if (lock || btn.classList.contains('matched') || btn === first) return;
+      btn.classList.add('flipped');
+      btn.setAttribute('aria-pressed', 'true');
+      if (!first) { first = btn; return; }
+      const second = btn;
+      if (first.dataset.id === second.dataset.id) {
+        // match
+        first.classList.add('matched');
+        second.classList.add('matched');
+        matched += 2;
+        if (matched === pairs.length * 2) {
+          feedback.textContent = 'Flot! Alle par fundet ✔';
+          feedback.className = 'ok';
+        }
+        first = null;
+      } else {
+        lock = true;
+        setTimeout(() => {
+          first.classList.remove('flipped');
+          second.classList.remove('flipped');
+          first.setAttribute('aria-pressed', 'false');
+          second.setAttribute('aria-pressed', 'false');
+          first = null; lock = false;
+        }, 900);
+      }
+    }
+
+    reset.addEventListener('click', setup);
+    setup();
+  })();
+  </script>
 </body>
 </html>

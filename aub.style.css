@@ -1,21 +1,20 @@
-/* =============== Font (vælg ÉN af metoderne) =============== */
-/* A) Behold @import, hvis CSS skal kunne stå alene: */
+/* =============== Font =============== */
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800&display=swap');
 
-/* B) Alternativ (bedre performance): 
-   Link font i HTML:
-   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800&display=swap" rel="stylesheet">
-   ...og SLET @import-linjen ovenfor.
-*/
-
-/* =============== Variabler (farver, spacing) =============== */
+/* =============== Variabler =============== */
 :root {
-  --color-primary: #211a52;
+  --color-primary: #211a52;   /* ink / hovedtekst */
   --color-secondary: #df8e2e;
   --color-secondary-2: #007fa3;
   --color-accent: #594fbf;
-  --color-white: #ffffff;
-  --color-muted: rgba(255, 255, 255, 0.75);
+
+  --white: #ffffff;
+  --muted-on-dark: rgba(255,255,255,.75);
+
+  /* Lyse overflader til kort/sektioner */
+  --surface: #f5f6ff;
+  --surface-2: #eef2ff;
+  --border: #d6d8f0;
 
   --radius: 16px;
   --btn-radius: 9999px;
@@ -27,6 +26,8 @@
   --maxw: 1920px;
   --slide-w: 1920px;
   --slide-h: 1080px;
+
+  --shadow: 0 6px 24px rgba(33,26,82,.12);
 }
 
 /* =============== Basis =============== */
@@ -37,8 +38,8 @@
 html, body { min-height: 100%; }
 
 body {
-  background: #000;
-  color: #fff; /* ← vigtig: undgå sort tekst på sort baggrund */
+  background: #000;        /* mørk sidebaggrund */
+  color: #fff;             /* hvid standardtekst på mørk baggrund */
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -50,25 +51,56 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smuk fokusmarkering for tastaturbrugere */
+/* Tastaturfokus */
 :focus-visible {
   outline: 3px solid var(--color-secondary-2);
   outline-offset: 2px;
   border-radius: 6px;
 }
 
-/* Mindre bevægelse hvis brugeren ønsker det */
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
 
-/* =============== Slides =============== */
+/* =============== Kort/sektioner (DIN SIDE BRUGER .card) =============== */
+/* NØGLEFIX: mørk tekst på lyse kort */
+.card {
+  background: var(--surface);
+  color: var(--color-primary);           /* ← tving mørk tekst her */
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+}
+
+/* Sørg for, at alt inde i kort arver korrekt tekstfarve */
+.card h1, .card h2, .card h3,
+.card p, .card li, .card label,
+.card strong, .card em, .card span {
+  color: inherit;
+}
+
+.card .muted {
+  color: #5b597f; /* mørkere muted til lys baggrund */
+}
+
+/* Links i kort */
+.card a {
+  color: var(--color-accent);
+  text-underline-offset: 2px;
+}
+.card a:hover { text-decoration: underline; }
+
+/* Radio/labels i quiz */
+.card label { cursor: pointer; }
+
+/* =============== Slide-komponent (hvis du bruger den) =============== */
 .slide,
 .slide * { box-sizing: border-box; }
 
 .slide {
-  color: var(--color-white);
-  background: var(--color-primary);
+  color: var(--white);                 /* slide-tekst er lys */
+  background: var(--color-primary);    /* slide-baggrund er mørk */
   width: 100%;
   max-width: var(--maxw);
   aspect-ratio: 16 / 9;
@@ -80,7 +112,7 @@ body {
 .slide--fixed {
   width: var(--slide-w);
   height: var(--slide-h);
-  aspect-ratio: auto; /* tilsidesæt for eksakt 1920x1080 */
+  aspect-ratio: auto;
 }
 
 .slide__inner {
@@ -92,7 +124,7 @@ body {
   row-gap: var(--gap);
 }
 
-/* Toplinje (logo + chips) */
+/* Toplinje (logo + chip) */
 .slide__top {
   display: flex;
   align-items: center;
@@ -115,7 +147,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted-on-dark);
   margin: 0 0 6px;
   font-size: clamp(12px, 1.2vw, 18px);
 }
@@ -131,7 +163,7 @@ body {
   margin: 0 0 var(--gap);
   line-height: 1.35;
   font-size: clamp(18px, 1.6vw, 28px);
-  color: var(--color-white);
+  color: var(--white);
 }
 
 /* CTA-område */
@@ -159,7 +191,6 @@ body {
   background: var(--color-secondary);
   color: #1a1506;
 }
-
 .btn--primary:hover,
 .btn--primary:focus-visible {
   transform: translateY(-1px);
@@ -168,18 +199,17 @@ body {
 
 .btn--ghost {
   background: transparent;
-  color: var(--color-white);
-  border-color: var(--color-white);
+  color: var(--white);
+  border-color: var(--white);
 }
-
 .btn--ghost:hover,
 .btn--ghost:focus-visible {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.08);
-  border-color: var(--color-white);
+  border-color: var(--white);
 }
 
-/* =============== Label-chip =============== */
+/* =============== Chip =============== */
 .chip {
   display: inline-block;
   padding: 8px 14px;
@@ -198,7 +228,7 @@ body {
   justify-content: space-between;
   gap: var(--gap);
   font-size: clamp(12px, 1vw, 16px);
-  color: var(--color-muted);
+  color: var(--muted-on-dark);
   padding-top: var(--pad-1);
 }
 
@@ -214,19 +244,16 @@ body {
   pointer-events: none;
 }
 
-/* Mere synlig, men diskret baggrundsgrafik */
 .bg-img {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
-  opacity: 0.22;       /* øget lidt fra 0.15 */
-  /* Fjern blend-mode for sikrere synlighed på mørk bg */
-  /* mix-blend-mode: screen; */ 
+  opacity: 0.22;    /* synlig men diskret */
   pointer-events: none;
 }
 
-/* =============== Responsiv tilpasning =============== */
+/* =============== Responsiv =============== */
 @media (max-width: 640px) {
   .slide__inner { padding: 20px; }
   .actions { gap: 10px; }

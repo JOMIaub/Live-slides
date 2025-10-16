@@ -31,20 +31,17 @@
 </head>
 <body class="font-barlow" data-theme="aub">
   <header class="deck-header" role="banner">
-    <div class="brand">
-      <img src="https://learninglib.org/wp-content/uploads/2025/10/AUB-logo-da-1.png" alt="Aalborg Universitetsbibliotek – logo" class="logo" />
-      <img src="https://learninglib.org/wp-content/uploads/2025/10/AAU_CENTER_WHITE.png" alt="Aalborg Universitet – logo" class="logo-alt" />
-    </div>
     <nav class="controls" aria-label="Slidenav">
       <button id="prevBtn" class="btn btn-ghost" aria-keyshortcuts="ArrowLeft PageUp A">◀ Forrige</button>
       <button id="nextBtn" class="btn btn-primary" aria-keyshortcuts="ArrowRight PageDown D">Næste ▶</button>
+      <button id="fsBtn" class="btn btn-ghost" aria-keyshortcuts="F">Fuldskærm ⤢</button>
     </nav>
   </header>
 
-  <main id="deck" class="deck" role="region" aria-roledescription="slideshow" aria-live="polite">
+  <main id="deck" class="deck deck--wide" role="region" aria-roledescription="slideshow" aria-live="polite">
 
     <!-- Slide 1: Forside -->
-    <section class="slide cover center" data-title="Publikationstyper – forside">
+    <section class="slide cover center enlarge" data-title="Publikationstyper – forside">
       <h1 class="font-barlow-xbold">Publikationstyper</h1>
       <p class="kicker">Introduktion til videnskabelig litteratur</p>
       <figure class="hero">
@@ -55,7 +52,7 @@
     </section>
 
     <!-- Slide 2: Formålet med videnskabelig litteratur -->
-    <section class="slide" data-title="Formål med videnskabelig litteratur">
+    <section class="slide enlarge" data-title="Formål med videnskabelig litteratur">
       <h2 class="font-barlow-bold">Hvad er formålet med videnskabelig litteratur?</h2>
       <ul class="big">
         <li><strong>Vidensdeling</strong>: Sprede ny forskning og indsigt</li>
@@ -70,7 +67,7 @@
     </section>
 
     <!-- Slide 3: Kendetegn -->
-    <section class="slide" data-title="Kendetegn ved videnskabelig litteratur">
+    <section class="slide enlarge" data-title="Kendetegn ved videnskabelig litteratur">
       <h2 class="font-barlow-bold">Hvad kendetegner videnskabelig litteratur?</h2>
       <div class="two-col">
         <ul>
@@ -86,7 +83,7 @@
     </section>
 
     <!-- Slide 4: Typer -->
-    <section class="slide" data-title="Typer af videnskabelig litteratur">
+    <section class="slide enlarge" data-title="Typer af videnskabelig litteratur">
       <h2 class="font-barlow-bold">Typer af videnskabelig litteratur</h2>
       <div class="grid">
         <article class="card">
@@ -110,7 +107,7 @@
     </section>
 
     <!-- Slide 5: Andre former -->
-    <section class="slide" data-title="Andre former for litteratur og information">
+    <section class="slide enlarge" data-title="Andre former for litteratur og information">
       <h2 class="font-barlow-bold">Andre former for litteratur og information</h2>
       <ul class="big">
         <li>Populærvidenskabelige bøger</li>
@@ -124,7 +121,7 @@
     </section>
 
     <!-- Slide 6: Eksempel – artikel -->
-    <section class="slide" data-title="Eksempel: Videnskabelig artikel">
+    <section class="slide enlarge" data-title="Eksempel: Videnskabelig artikel">
       <h2 class="font-barlow-bold">Eksempel: Videnskabelig artikel</h2>
       <blockquote class="ref">
         Feuerriegel, S., Hartmann, J., Janiesch, C., &amp; Zschech, P. (2024). <em>Generative AI.</em> Business &amp; Information Systems Engineering, 66(1), 111–126. https://doi.org/10.1007/s12599-023-00834-7
@@ -133,7 +130,7 @@
     </section>
 
     <!-- Slide 7: Eksempel – bog -->
-    <section class="slide" data-title="Eksempel: Videnskabelig bog">
+    <section class="slide enlarge" data-title="Eksempel: Videnskabelig bog">
       <h2 class="font-barlow-bold">Eksempel: Videnskabelig bog</h2>
       <blockquote class="ref">
         Taulli, T. (2023). <em>Generative AI: How ChatGPT and Other AI Tools Will Revolutionize Business</em> (1st ed.). Apress. https://doi.org/10.1007/978-1-4842-9367-6
@@ -142,7 +139,7 @@
     </section>
 
     <!-- Slide 8: Eksempel – proceeding -->
-    <section class="slide" data-title="Eksempel: Konferenceproceeding">
+    <section class="slide enlarge" data-title="Eksempel: Konferenceproceeding">
       <h2 class="font-barlow-bold">Eksempel: Konferenceproceeding</h2>
       <blockquote class="ref">
         Simaremare, M., Rico, S., &amp; Triando, D. B. (2025). <em>Exploring the Potential of Generative AI: Use Cases in Software Startups.</em> XP 2024 Workshops, Bozen-Bolzano, Italy, June 4–7, 2024, Revised Selected Papers, 3. https://doi.org/10.1007/978-3-031-72781-8_1
@@ -151,7 +148,7 @@
     </section>
 
     <!-- Slide 9: Hvornår bruge videnskabelig litteratur -->
-    <section class="slide" data-title="Hvornår bruger du videnskabelig litteratur?">
+    <section class="slide enlarge" data-title="Hvornår bruger du videnskabelig litteratur?">
       <h2 class="font-barlow-bold">Du skal bruge videnskabelig litteratur for at …</h2>
       <ul class="big">
         <li>bygge videre på andres viden</li>
@@ -162,7 +159,7 @@
     </section>
 
     <!-- Slide 10: Hvordan bruge andre former -->
-    <section class="slide" data-title="Hvordan kan du bruge andre former?">
+    <section class="slide enlarge" data-title="Hvordan kan du bruge andre former?">
       <h2 class="font-barlow-bold">Du kan bruge andre former for litteratur til …</h2>
       <ul class="big">
         <li>at motivere problemformulering</li>
@@ -173,7 +170,7 @@
     </section>
 
     <!-- Slide 11: Microgame – Drag & Drop klassifikation -->
-    <section class="slide" data-title="Øvelse: Klassificér publikationer" id="dragdrop">
+    <section class="slide enlarge" data-title="Øvelse: Klassificér publikationer" id="dragdrop">
       <h2 class="font-barlow-bold">Øvelse: Træk og slip – Hvad er videnskabeligt?</h2>
       <p>Træk kortene til den rigtige kategori.</p>
       <div class="classify">
@@ -204,7 +201,7 @@
     </section>
 
     <!-- Slide 12: Micro-quiz – Multiple choice -->
-    <section class="slide" data-title="Quiz: Publikationstyper" id="mcq">
+    <section class="slide enlarge" data-title="Quiz: Publikationstyper" id="mcq">
       <h2 class="font-barlow-bold">Hurtig quiz</h2>
       <form class="quiz" id="quizForm">
         <fieldset>
@@ -234,7 +231,7 @@
     </section>
 
     <!-- Slide 13: Microgame – Vendespil (memory) -->
-    <section class="slide" data-title="Vendespil: Match begreber" id="memory">
+    <section class="slide enlarge" data-title="Vendespil: Match begreber" id="memory">
       <h2 class="font-barlow-bold">Vendespil: Match begreber</h2>
       <p>Find par mellem publikationstype og kendetegn.</p>
       <div class="memory-grid" id="memoryGrid" aria-label="Vendespil" role="grid"></div>
@@ -256,6 +253,9 @@
     </section>
 
   </main>
+
+  <!-- AAU logo nederst til højre (fastplaceret) -->
+  <img class="corner-logo" src="https://learninglib.org/wp-content/uploads/2025/10/AAU_CENTER_WHITE.png" alt="Aalborg Universitet – logo" />
 
   <footer class="deck-footer" role="contentinfo">
     <div class="progress" id="progress" aria-label="Fremdrift" role="slider" aria-valuemin="1" aria-valuemax="14" aria-valuenow="1"></div>
@@ -302,17 +302,36 @@
     // Events
     nextBtn.addEventListener('click', next);
     prevBtn.addEventListener('click', prev);
-    document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', (e) => {
       if (['ArrowRight','PageDown','KeyD'].includes(e.code)) next();
       if (['ArrowLeft','PageUp','KeyA'].includes(e.code)) prev();
       if (e.code === 'Home') show(0);
       if (e.code === 'End') show(slides.length - 1);
+      if (e.code === 'KeyF') toggleFullscreen();
     });
-    progress.addEventListener('click', (e) => {
+      if (['ArrowLeft','PageUp','KeyA'].includes(e.code)) prev();
+      if (e.code === 'Home') show(0);
+      if (e.code === 'End') show(slides.length - 1);
+    });
+        progress.addEventListener('click', (e) => {
       const rect = progress.getBoundingClientRect();
       const ratio = (e.clientX - rect.left) / rect.width;
       show(Math.floor(ratio * slides.length));
     });
+
+    // Fullscreen API
+    function toggleFullscreen() {
+      const elem = document.documentElement;
+      if (!document.fullscreenElement) {
+        if (elem.requestFullscreen) elem.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    // UI button for fullscreen
+    const fsBtn = document.getElementById('fsBtn');
+    if (fsBtn) fsBtn.addEventListener('click', toggleFullscreen);
   })();
 
   // ===== Drag & Drop Classification =====

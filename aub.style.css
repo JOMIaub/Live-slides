@@ -178,3 +178,90 @@ header .muted {
   display: none !important; 
 }
 
+/* ===================================================================== */
+/* ===== AUB SLIDESHOW TILPASNINGER (passer til din HTML) ============== */
+/* ===================================================================== */
+
+/* Deck-ramme: gør indholdet større og centrér */
+.deck { width: 100%; max-width: 1400px; margin: 0 auto; padding: 16px; }
+.deck.deck--wide { max-width: 1400px; } /* kan hæves til 1600/1800px efter behov */
+
+/* Topbar med kontrolknapper */
+.deck-header { display:flex; justify-content:center; gap:.5rem; padding:.75rem; }
+
+/* Progressbar (klikbar) – JS sætter --progress */
+.progress{
+  height: 6px;
+  background: rgba(255,255,255,.15);
+  position: relative;
+  cursor: pointer;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.progress::after{
+  content: "";
+  position: absolute; inset: 0;
+  width: calc(var(--progress, 0) * 100%);
+  background: var(--card-bg);
+}
+
+/* Gør slides visuelt større via skaleret typografi */
+.slide.enlarge{ font-size: clamp(18px, 2.2vw, 22px); }
+.slide.enlarge h1{ font-size: clamp(40px, 6vw, 64px); line-height:1.05; }
+.slide.enlarge h2{ font-size: clamp(28px, 4vw, 40px); line-height:1.1; }
+.slide.enlarge .big{ font-size: 1.15em; }
+
+/* Helteslide-billede må gerne være stort */
+.hero img{ max-width: min(80vw, 900px); height:auto; display:block; margin: 1rem auto; }
+
+/* Fast AAU-logo nederst til højre */
+.corner-logo{
+  position: fixed; right: 18px; bottom: 18px;
+  width: clamp(90px, 12vw, 160px); height:auto;
+  opacity: .9; pointer-events: none;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,.25));
+}
+
+/* Kort og grids i “Typer af litteratur” */
+.grid{ display:grid; gap:1rem; grid-template-columns: repeat( auto-fit, minmax(220px, 1fr) ); }
+.card{ background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.12); }
+
+/* ======================= Microgames – større ========================= */
+
+/* Drag & Drop klassifikation */
+.classify{ display:grid; gap:1.2rem; grid-template-columns: 1fr 1fr; align-items:start; }
+.pool{ display:flex; flex-wrap:wrap; gap:.6rem; padding:1rem; background: rgba(255,255,255,.06); border-radius:1rem; min-height: 140px; }
+.draggable{ font-size:1.05em; padding:.8rem 1rem; border-radius:.8rem; background:#fff; color:#111; cursor:grab; border:0; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+.dropzone{ min-height: 260px; padding:1rem; background: rgba(255,255,255,.06); border:2px dashed rgba(255,255,255,.35); border-radius:1rem; }
+.bin h3{ margin:.25rem 0 .5rem; font-size:1.2em; }
+.hover{ outline: 2px solid var(--card-bg); }
+
+/* Quiz */
+.quiz fieldset{ border:0; margin:1rem 0 1.25rem; padding:0; }
+.quiz legend{ font-weight: 700; margin-bottom:.4rem; }
+.quiz label{ display:block; padding:.5rem .7rem; background: rgba(255,255,255,.06); border-radius:.6rem; margin:.4rem 0; }
+
+/* Vendespil (memory) – større brikker i 6 kolonner */
+.memory-grid{ display:grid; gap:.8rem; grid-template-columns: repeat(6, minmax(100px, 1fr)); justify-items:stretch; }
+.memo-card{
+  position:relative; width:100%; aspect-ratio: 2 / 3; border-radius:1rem;
+  border:1px solid rgba(255,255,255,.2);
+  background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.03));
+  transform-style: preserve-3d; transition: transform .25s ease;
+  font-size: clamp(14px, 1.5vw, 18px);
+}
+.memo-card .front, .memo-card .back{
+  position:absolute; inset:0; display:grid; place-items:center; backface-visibility: hidden; padding:.7rem;
+}
+.memo-card .back{ transform: rotateY(180deg); }
+.memo-card.flipped{ transform: rotateY(180deg); }
+.memo-card.matched{ outline:2px solid var(--card-bg); }
+
+/* Små skærme – bedre layout for aktiviteter */
+@media (max-width: 900px){
+  .classify{ grid-template-columns: 1fr; }
+  .memory-grid{ grid-template-columns: repeat(3, minmax(90px, 1fr)); }
+}
+
+

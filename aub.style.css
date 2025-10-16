@@ -59,7 +59,7 @@ body{
 /* =============== Cards/sektioner =============== */
 .card{
   background: var(--card-bg);
-  color: var(--card-ink);                 /* vigtig: mørk tekst på orange */
+  color: var(--card-ink);
   border: 1px solid var(--border-on-card);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -91,12 +91,12 @@ body{
 /* Muted-tekst på orange baggrund */
 .card .muted { color: color-mix(in srgb, var(--card-ink) 70%, white 30%); }
 
-/* =============== (Valgfrit) Slide-komponent, hvis du bruger den =============== */
+/* =============== Slide-komponent =============== */
 .slide, .slide * { box-sizing: border-box; }
 
 .slide {
-  color: var(--page-ink);                 /* lys tekst */
-  background: var(--page-bg);             /* mørk slide */
+  color: var(--page-ink);
+  background: var(--page-bg);
   width: 100%;
   max-width: var(--maxw);
   aspect-ratio: 16 / 9;
@@ -174,22 +174,20 @@ body{
   .slide__inner { padding: 20px; }
   .actions { gap: 10px; }
 }
-header .muted { 
-  display: none !important; 
-}
+header .muted { display: none !important; }
 
 /* ===================================================================== */
-/* ===== AUB SLIDESHOW TILPASNINGER (passer til din HTML) ============== */
+/* ===== AUB SLIDESHOW TILPASNINGER ==================================== */
 /* ===================================================================== */
 
-/* Deck-ramme: gør indholdet større og centrér */
+/* Deck-ramme */
 .deck { width: 100%; max-width: 1400px; margin: 0 auto; padding: 16px; }
-.deck.deck--wide { max-width: 1400px; } /* kan hæves til 1600/1800px efter behov */
+.deck.deck--wide { max-width: 1400px; }
 
-/* Topbar med kontrolknapper */
+/* Topbar */
 .deck-header { display:flex; justify-content:center; gap:.5rem; padding:.75rem; }
 
-/* Progressbar (klikbar) – JS sætter --progress */
+/* Progressbar */
 .progress{
   height: 6px;
   background: rgba(255,255,255,.15);
@@ -206,16 +204,16 @@ header .muted {
   background: var(--card-bg);
 }
 
-/* Gør slides visuelt større via skaleret typografi */
+/* Større slides og tekst */
 .slide.enlarge{ font-size: clamp(18px, 2.2vw, 22px); }
 .slide.enlarge h1{ font-size: clamp(40px, 6vw, 64px); line-height:1.05; }
 .slide.enlarge h2{ font-size: clamp(28px, 4vw, 40px); line-height:1.1; }
 .slide.enlarge .big{ font-size: 1.15em; }
 
-/* Helteslide-billede må gerne være stort */
+/* Helteslide */
 .hero img{ max-width: min(80vw, 900px); height:auto; display:block; margin: 1rem auto; }
 
-/* Fast AAU-logo nederst til højre */
+/* Fast AAU-logo */
 .corner-logo{
   position: fixed; right: 18px; bottom: 18px;
   width: clamp(90px, 12vw, 160px); height:auto;
@@ -223,13 +221,13 @@ header .muted {
   filter: drop-shadow(0 2px 8px rgba(0,0,0,.25));
 }
 
-/* Kort og grids i “Typer af litteratur” */
+/* Kort og grids */
 .grid{ display:grid; gap:1rem; grid-template-columns: repeat( auto-fit, minmax(220px, 1fr) ); }
 .card{ background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.12); }
 
 /* ======================= Microgames – større ========================= */
 
-/* Drag & Drop klassifikation */
+/* Drag & Drop */
 .classify{ display:grid; gap:1.2rem; grid-template-columns: 1fr 1fr; align-items:start; }
 .pool{ display:flex; flex-wrap:wrap; gap:.6rem; padding:1rem; background: rgba(255,255,255,.06); border-radius:1rem; min-height: 140px; }
 .draggable{ font-size:1.05em; padding:.8rem 1rem; border-radius:.8rem; background:#fff; color:#111; cursor:grab; border:0; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
@@ -242,7 +240,7 @@ header .muted {
 .quiz legend{ font-weight: 700; margin-bottom:.4rem; }
 .quiz label{ display:block; padding:.5rem .7rem; background: rgba(255,255,255,.06); border-radius:.6rem; margin:.4rem 0; }
 
-/* Vendespil (memory) – større brikker i 6 kolonner */
+/* Vendespil */
 .memory-grid{ display:grid; gap:.8rem; grid-template-columns: repeat(6, minmax(100px, 1fr)); justify-items:stretch; }
 .memo-card{
   position:relative; width:100%; aspect-ratio: 2 / 3; border-radius:1rem;
@@ -258,17 +256,29 @@ header .muted {
 .memo-card.flipped{ transform: rotateY(180deg); }
 .memo-card.matched{ outline:2px solid var(--card-bg); }
 
-/* Små skærme – bedre layout for aktiviteter */
+/* Små skærme */
 @media (max-width: 900px){
   .classify{ grid-template-columns: 1fr; }
   .memory-grid{ grid-template-columns: repeat(3, minmax(90px, 1fr)); }
 }
-/* Kun aktivt slide skal vises */
-.slide { display: none; }
-.slide.is-active { display: block; }
 
-/* Slideshow-mode: undgå scroll */
+/* ===================================================================== */
+/* ===== VISUEL KORREKTION AF SLIDES =================================== */
+/* ===================================================================== */
+
+/* Kun aktivt slide vises, men må scrolles internt */
+.slide { display: none; }
+.slide.is-active { display: block; overflow: auto; }
+
+/* Slideshow-mode: forhindrer sidescroll */
 body.slideshow-mode { overflow: hidden; }
 
-
-
+/* Sticky actions på dragdrop */
+#dragdrop .actions{
+  position: sticky;
+  bottom: 12px;
+  background: rgba(33,26,82,.6);
+  backdrop-filter: blur(6px);
+  padding: 8px 12px;
+  border-radius: 12px;
+}
